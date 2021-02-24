@@ -35,6 +35,7 @@
   ZEND_PARSE_PARAMETERS_END()
 #endif
 
+/* Class entry pointers */
 PHPAPI zend_class_entry *zceChip;
 PHPAPI zend_class_entry *zceException;
 PHPAPI zend_class_entry *zceLine;
@@ -63,7 +64,7 @@ PHP_MINIT_FUNCTION(phpgpio) {
   REGISTER_NS_LONG_CONSTANT("GPIO", "DRIVE_OPEN_DRAIN", 2, CONST_CS | CONST_PERSISTENT);
   REGISTER_NS_LONG_CONSTANT("GPIO", "DRIVE_OPEN_SOURCE", 3, CONST_CS | CONST_PERSISTENT);
 
-  /* Classes */
+  /* Class Registration (from each *.h file) */
   zceLine = registerLineClass();
   zceLines = registerLinesClass();
   zceException = registerExceptionClass();

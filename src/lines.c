@@ -19,6 +19,7 @@
 #endif
 
 #include "lines.h"
+#include "zend_interfaces.h"
 #include "phpgpio_arginfo.h"
 
 #include <gpiod.h>
@@ -28,7 +29,11 @@ zend_class_entry* registerLinesClass() {
 
   INIT_NS_CLASS_ENTRY(ce, "GPIO", "Lines", class_GPIO_Lines_methods);
   class_entry = zend_register_internal_class_ex(&ce, NULL);
+  // Final class / Objects of this class may not have dynamic properties
   class_entry->ce_flags |= ZEND_ACC_FINAL | ZEND_ACC_NO_DYNAMIC_PROPERTIES;
+
+  // GPIO\Lines implements \Countable, \ArrayAccess and \Iterator
+  zend_class_implements(class_entry, 3, zend_ce_countable, zend_ce_arrayaccess, zend_ce_iterator);
 
   return class_entry;
 }

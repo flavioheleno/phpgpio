@@ -29,6 +29,7 @@ zend_class_entry* registerLineClass() {
 
   INIT_NS_CLASS_ENTRY(ce, "GPIO", "Line", class_GPIO_Line_methods);
   class_entry = zend_register_internal_class_ex(&ce, NULL);
+  // Final class / Objects of this class may not have dynamic properties
   class_entry->ce_flags |= ZEND_ACC_FINAL | ZEND_ACC_NO_DYNAMIC_PROPERTIES;
 
   return class_entry;
