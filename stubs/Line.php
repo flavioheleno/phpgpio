@@ -1,6 +1,6 @@
 <?php
 
-namespace Gpiod;
+namespace GPIO;
 
 /**
  * Represents a single GPIO line.
@@ -63,85 +63,85 @@ final class Line {
   /**
    * Get current bias of this line.
    *
-   * @return int Current bias setting.
+   * @return int
    */
   public function bias(): int {}
 
   /**
    * Get the consumer of this line (if any).
    *
-   * @return string Name of the consumer of this line or an empty string if it is unused.
+   * @return string
    */
   public function consumer(): string {}
 
   /**
    * Get current direction of this line.
    *
-   * @return int Current direction setting.
+   * @return int
    */
   public function direction(): int {}
 
   /**
    * Get current drive setting of this line.
    *
-   * @return int Current drive setting.
+   * @return int
    */
   public function drive(): int {}
 
   /**
    * Get the parent chip.
    *
-   * @return \Gpiod\Chip Parent chip of this line.
+   * @return \GPIO\Chip
    */
   public function getChip(): Chip {}
 
   /**
    * Read the line value.
    *
-   * @return int Current value (0 or 1).
+   * @return int
    */
   public function getValue(): int {}
 
   /**
    * Check if this line's signal is inverted.
    *
-   * @return bool True if this line is "active-low", false otherwise.
+   * @return bool
    */
   public function isActiveLow(): bool {}
 
   /**
    * Check if this user has ownership of this line.
    *
-   * @return bool True if the user has ownership of this line, false otherwise.
+   * @return bool
    */
   public function isRequested(): bool {}
 
   /**
    * Check if this line is used by the kernel or other user space process.
    *
-   * @return bool True if this line is in use, false otherwise.
+   * @return bool
    */
   public function isUsed(): bool {}
 
   /**
    * Get the name of this line (if any).
    *
-   * @return string Name of this line or an empty string if it is unnamed.
+   * @return string
    */
   public function name(): string {}
 
   /**
    * Get the offset of this line.
    *
-   * @return int Offet of this line.
+   * @return int
    */
   public function offset(): int {}
 
   /**
    * Request this line.
    *
-   * @param \Gpiod\LineRequest $config  Request config (see gpiod::line_request).
-   * @param int $default                Default value (only matters for OUTPUT direction).
+   * @param \GPIO\LineRequest $config  Request config (see gpiod::line_request).
+   * @param int               $default Default value (only matters for OUTPUT direction).
    */
   public function request(LineRequest $lineRequest, int $default = 0): void {}
 
