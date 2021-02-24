@@ -21,6 +21,8 @@
 #include "chip.h"
 #include "phpgpio_arginfo.h"
 
+#include <gpiod.h>
+
 zend_class_entry* register_chip_class() {
   zend_class_entry ce, *class_entry;
 
@@ -29,6 +31,16 @@ zend_class_entry* register_chip_class() {
   class_entry->ce_flags |= ZEND_ACC_FINAL | ZEND_ACC_NO_DYNAMIC_PROPERTIES;
 
   return class_entry;
+}
+
+PHP_METHOD(GPIO_Chip, isDevice) {
+  char *path;
+  size_t pathLen;
+  ZEND_PARSE_PARAMETERS_START(1, 1)
+    Z_PARAM_STRING(path, pathLen)
+  ZEND_PARSE_PARAMETERS_END();
+
+  RETURN_BOOL((int)gpiod_is_gpiochip_device(path));
 }
 
 PHP_METHOD(GPIO_Chip, __construct) {

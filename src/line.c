@@ -22,6 +22,8 @@
 #include "line.h"
 #include "phpgpio_arginfo.h"
 
+#include <gpiod.h>
+
 zend_class_entry* register_line_class() {
   zend_class_entry ce, *class_entry;
 
