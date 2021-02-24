@@ -20,7 +20,7 @@
 
 #include "php.h"
 #include "ext/standard/info.h"
-#include "php_phpgpio.h"
+#include "phpgpio.h"
 #include "phpgpio_arginfo.h"
 
 #include "src/line.h"
