@@ -13,7 +13,7 @@ PHP_ARG_WITH(
   [libgpiod-dir],
   [for system library directory],
   [AS_HELP_STRING(
-    [--with-libgpiod-dir[=NAME]],
+    [--with-libgpiod-dir[=DIR]],
     [Set the path to libgpiod install prefix.]
   )],
   [lib],
@@ -21,12 +21,12 @@ PHP_ARG_WITH(
 )
 
 if test "$PHP_PHPGPIO" != "no"; then
-  PKG_CHECK_MODULES([LIBGPIOD], [libgpiod >= 1.2])
+  PKG_CHECK_MODULES([LIBGPIOD], [libgpiod >= 1.6])
   PHP_EVAL_INCLINE($LIBGPIOD_CFLAGS)
-  PHP_EVAL_LIBLINE($LIBGPIOD_LIBS, GPIOD_SHARED_LIBADD)
-  PHP_SUBST(GPIOD_SHARED_LIBADD)
+  PHP_EVAL_LIBLINE($LIBGPIOD_LIBS, PHPGPIO_SHARED_LIBADD)
+  PHP_SUBST(PHPGPIO_SHARED_LIBADD)
 
   AC_DEFINE(HAVE_PHPGPIO, 1, [ Have phpgpio support ])
 
-  PHP_NEW_EXTENSION(phpgpio, phpgpio.c src/line.c src/lines.c src/chip.c, $ext_shared)
+  PHP_NEW_EXTENSION(phpgpio, phpgpio.c src/line.c src/lines.c src/exception.c src/chip.c, $ext_shared)
 fi

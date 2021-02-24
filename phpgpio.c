@@ -25,6 +25,7 @@
 
 #include "src/line.h"
 #include "src/lines.h"
+#include "src/exception.h"
 #include "src/chip.h"
 
 /* For compatibility with older PHP versions */
@@ -34,34 +35,10 @@
   ZEND_PARSE_PARAMETERS_END()
 #endif
 
-PHPAPI zend_class_entry *chip;
-PHPAPI zend_class_entry *line;
-PHPAPI zend_class_entry *lines;
-
-/* {{{ void test1() */
-// PHP_FUNCTION(test1) {
-//   ZEND_PARSE_PARAMETERS_NONE();
-
-//   php_printf("The extension %s is loaded and working!\r\n", "phpgpio");
-// }
-/* }}} */
-
-/* {{{ string test2( [ string $var ] ) */
-// PHP_FUNCTION(test2) {
-//   char *var = "World";
-//   size_t var_len = sizeof("World") - 1;
-//   zend_string *retval;
-
-//   ZEND_PARSE_PARAMETERS_START(0, 1)
-//     Z_PARAM_OPTIONAL
-//     Z_PARAM_STRING(var, var_len)
-//   ZEND_PARSE_PARAMETERS_END();
-
-//   retval = strpprintf(0, "Hello %s", var);
-
-//   RETURN_STR(retval);
-// }
-/* }}}*/
+PHPAPI zend_class_entry *zceChip;
+PHPAPI zend_class_entry *zceException;
+PHPAPI zend_class_entry *zceLine;
+PHPAPI zend_class_entry *zceLines;
 
 /* {{{ PHP_RINIT_FUNCTION */
 PHP_RINIT_FUNCTION(phpgpio) {
@@ -87,9 +64,10 @@ PHP_MINIT_FUNCTION(phpgpio) {
   REGISTER_NS_LONG_CONSTANT("GPIO", "DRIVE_OPEN_SOURCE", 3, CONST_CS | CONST_PERSISTENT);
 
   /* Classes */
-  line = register_line_class();
-  lines = register_lines_class();
-  chip = register_chip_class();
+  zceLine = registerLineClass();
+  zceLines = registerLinesClass();
+  zceException = registerExceptionClass();
+  zceChip = registerChipClass();
 }
 /* }}} */
 

@@ -9,10 +9,12 @@ if (!extension_loaded('phpgpio')) {
 --FILE--
 <?php
 var_dump(class_exists('GPIO\\Chip'));
+var_dump(class_exists('GPIO\\Exception'));
 var_dump(class_exists('GPIO\\Line'));
 var_dump(class_exists('GPIO\\Lines'));
 ?>
 --EXPECT--
+bool(true)
 bool(true)
 bool(true)
 bool(true)

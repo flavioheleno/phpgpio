@@ -19,11 +19,14 @@
 #endif
 
 #include "chip.h"
+#include "php_phpgpio.h"
 #include "phpgpio_arginfo.h"
 
 #include <gpiod.h>
 
-zend_class_entry* register_chip_class() {
+struct gpiod_chip *chip;
+
+zend_class_entry* registerChipClass() {
   zend_class_entry ce, *class_entry;
 
   INIT_NS_CLASS_ENTRY(ce, "GPIO", "Chip", class_GPIO_Chip_methods);
@@ -44,6 +47,25 @@ PHP_METHOD(GPIO_Chip, isDevice) {
 }
 
 PHP_METHOD(GPIO_Chip, __construct) {
+  char *path;
+  size_t pathLen;
+  ZEND_PARSE_PARAMETERS_START(1, 1)
+    Z_PARAM_STRING(path, pathLen)
+  ZEND_PARSE_PARAMETERS_END();
+
+  chip = gpiod_chip_open(path);
+  if (chip == NULL) {
+    zend_throw_error(zceException, "Failed to open chip");
+
+    RETURN_THROWS();
+  }
+}
+
+PHP_METHOD(GPIO_Chip, __destruct) {
+  if (chip != NULL) {
+    gpiod_chip_close(chip);
+    chip = NULL;
+  }
 }
 
 PHP_METHOD(GPIO_Chip, findLine) {

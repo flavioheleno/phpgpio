@@ -14,30 +14,11 @@
    +----------------------------------------------------------------------+
 */
 
-#ifndef PHP_PHPGPIO_H
-#define PHP_PHPGPIO_H
+#ifndef PHPGPIO_EXCEPTION_H
+#define PHPGPIO_EXCEPTION_H
 
-  extern zend_module_entry phpgpio_module_entry;
-  #define phpext_phpgpio_ptr &phpgpio_module_entry
+  #include "php.h"
 
-  #define PHP_PHPGPIO_EXTNAME   "phpgpio"
-  #define PHP_PHPGPIO_VERSION   "0.0.1-dev"
-  #define PHP_PHPGPIO_AUTHOR    "flavioheleno"
-  #define PHP_PHPGPIO_URL       "https://github.com/flavioheleno/phpgpio"
-  #define PHP_PHPGPIO_COPYRIGHT "Copyright (c) 2021"
-
-  #if defined(ZTS) && defined(COMPILE_DL_PHPGPIO)
-    ZEND_TSRMLS_CACHE_EXTERN()
-  #endif
-
-  BEGIN_EXTERN_C()
-
-  /* Class entry pointers */
-  extern PHPAPI zend_class_entry *zceChip;
-  extern PHPAPI zend_class_entry *zceException;
-  extern PHPAPI zend_class_entry *zceLine;
-  extern PHPAPI zend_class_entry *zceLines;
-
-  END_EXTERN_C()
+  zend_class_entry* registerExceptionClass();
 
 #endif

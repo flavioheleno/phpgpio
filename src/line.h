@@ -19,6 +19,6 @@
 
   #include "php.h"
 
-  zend_class_entry* register_line_class();
+  zend_class_entry* registerLineClass();
 
 #endif

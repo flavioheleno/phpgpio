@@ -1,5 +1,5 @@
 /* This is a generated file, edit the .stub.php file instead.
- * Stub hash: 361856250f84c03f4cf2231544c067f226881ba8 */
+ * Stub hash: cadd6f069f7fdf2dd1e761f26e37f7050cbdf230 */
 
 ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_GPIO_Chip_isDevice, 0, 1, _IS_BOOL, 0)
 	ZEND_ARG_TYPE_INFO(0, path, IS_STRING, 0)
@@ -7,6 +7,9 @@ ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_INFO_EX(arginfo_class_GPIO_Chip___construct, 0, 0, 1)
 	ZEND_ARG_TYPE_INFO(0, path, IS_STRING, 0)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(arginfo_class_GPIO_Chip___destruct, 0, 0, 0)
 ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_WITH_RETURN_OBJ_INFO_EX(arginfo_class_GPIO_Chip_findLine, 0, 2, GPIO\\Lines, 0)
@@ -98,10 +101,9 @@ ZEND_END_ARG_INFO()
 
 #define arginfo_class_GPIO_Lines_offsetUnset arginfo_class_GPIO_Lines_offsetGet
 
-ZEND_BEGIN_ARG_INFO_EX(arginfo_class_GPIO_Lines_current, 0, 0, 0)
-ZEND_END_ARG_INFO()
+#define arginfo_class_GPIO_Lines_current arginfo_class_GPIO_Chip___destruct
 
-#define arginfo_class_GPIO_Lines_key arginfo_class_GPIO_Lines_current
+#define arginfo_class_GPIO_Lines_key arginfo_class_GPIO_Chip___destruct
 
 #define arginfo_class_GPIO_Lines_next arginfo_class_GPIO_Line_reset
 
@@ -112,6 +114,7 @@ ZEND_END_ARG_INFO()
 
 ZEND_METHOD(GPIO_Chip, isDevice);
 ZEND_METHOD(GPIO_Chip, __construct);
+ZEND_METHOD(GPIO_Chip, __destruct);
 ZEND_METHOD(GPIO_Chip, findLine);
 ZEND_METHOD(GPIO_Chip, getAllLines);
 ZEND_METHOD(GPIO_Chip, getLine);
@@ -150,12 +153,18 @@ ZEND_METHOD(GPIO_Lines, valid);
 static const zend_function_entry class_GPIO_Chip_methods[] = {
 	ZEND_ME(GPIO_Chip, isDevice, arginfo_class_GPIO_Chip_isDevice, ZEND_ACC_PUBLIC|ZEND_ACC_STATIC)
 	ZEND_ME(GPIO_Chip, __construct, arginfo_class_GPIO_Chip___construct, ZEND_ACC_PUBLIC)
+	ZEND_ME(GPIO_Chip, __destruct, arginfo_class_GPIO_Chip___destruct, ZEND_ACC_PUBLIC)
 	ZEND_ME(GPIO_Chip, findLine, arginfo_class_GPIO_Chip_findLine, ZEND_ACC_PUBLIC)
 	ZEND_ME(GPIO_Chip, getAllLines, arginfo_class_GPIO_Chip_getAllLines, ZEND_ACC_PUBLIC)
 	ZEND_ME(GPIO_Chip, getLine, arginfo_class_GPIO_Chip_getLine, ZEND_ACC_PUBLIC)
 	ZEND_ME(GPIO_Chip, getLines, arginfo_class_GPIO_Chip_getLines, ZEND_ACC_PUBLIC)
 	ZEND_ME(GPIO_Chip, getLabel, arginfo_class_GPIO_Chip_getLabel, ZEND_ACC_PUBLIC)
 	ZEND_ME(GPIO_Chip, getName, arginfo_class_GPIO_Chip_getName, ZEND_ACC_PUBLIC)
+	ZEND_FE_END
+};
+
+
+static const zend_function_entry class_GPIO_Exception_methods[] = {
 	ZEND_FE_END
 };
 

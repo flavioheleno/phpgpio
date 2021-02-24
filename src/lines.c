@@ -23,7 +23,7 @@
 
 #include <gpiod.h>
 
-zend_class_entry* register_lines_class() {
+zend_class_entry* registerLinesClass() {
   zend_class_entry ce, *class_entry;
 
   INIT_NS_CLASS_ENTRY(ce, "GPIO", "Lines", class_GPIO_Lines_methods);

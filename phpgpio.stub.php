@@ -18,13 +18,20 @@ final class Chip {
   public static function isDevice(string $path): bool {}
 
   /**
-   * Opens the chip using chip::open.
+   * Opens the chip.
    *
    * @param string $path Path to the GPIO chip device.
    *
    * @return void
    */
   public function __construct(string $path) {}
+
+  /**
+   * Closes the chip.
+   *
+   * @return void
+   */
+  public function __destruct() {}
 
   /**
    * Find all GPIO lines by name among lines exposed by this GPIO chip.
@@ -75,64 +82,70 @@ final class Chip {
    */
   public function getName(): string {}
 }
+
+/**
+ * Line's bias state is unknown.
+ * @var int
+ */
+const BIAS_UNKNOWN = 1;
+
+/**
+ * Line's internal bias is disabled.
+ * @var int
+ */
+const BIAS_DISABLED = 2;
+
+/**
+ * Line's internal pull-up bias is enabled.
+ * @var int
+ */
+const BIAS_PULL_UP = 3;
+
+/**
+ * Line's internal pull-down bias is enabled.
+ * @var int
+ */
+const BIAS_PULL_DOWN = 4;
+
+/**
+ * Line's direction setting is input.
+ * @var int
+ */
+const DIRECTION_INPUT = 1;
+
+/**
+ * Line's direction setting is output.
+ * @var int
+ */
+const DIRECTION_OUTPUT = 2;
+
+/**
+ * Drive setting is unknown.
+ * @var int
+ */
+const DRIVE_PUSH_PULL = 1;
+
+/**
+ * Line output is open-drain.
+ * @var int
+ */
+const DRIVE_OPEN_DRAIN = 2;
+
+/**
+ * Line output is open-source.
+ * @var int
+ */
+const DRIVE_OPEN_SOURCE = 3;
+
+/**
+ * Base exception
+ */
+class Exception extends \Error {}
+
 /**
  * Represents a single GPIO line.
  */
 final class Line {
-  /**
-   * Line's bias state is unknown.
-   * @var int
-   */
-  public const BIAS_UNKNOWN = 1;
-
-  /**
-   * Line's internal bias is disabled.
-   * @var int
-   */
-  public const BIAS_DISABLED = 2;
-
-  /**
-   * Line's internal pull-up bias is enabled.
-   * @var int
-   */
-  public const BIAS_PULL_UP = 3;
-
-  /**
-   * Line's internal pull-down bias is enabled.
-   * @var int
-   */
-  public const BIAS_PULL_DOWN = 4;
-
-  /**
-   * Line's direction setting is input.
-   * @var int
-   */
-  public const DIRECTION_INPUT = 1;
-
-  /**
-   * Line's direction setting is output.
-   * @var int
-   */
-  public const DIRECTION_OUTPUT = 2;
-
-  /**
-   * Drive setting is unknown.
-   * @var int
-   */
-  public const DRIVE_PUSH_PULL = 1;
-
-  /**
-   * Line output is open-drain.
-   * @var int
-   */
-  public const DRIVE_OPEN_DRAIN = 2;
-
-  /**
-   * Line output is open-source.
-   * @var int
-   */
-  public const DRIVE_OPEN_SOURCE = 3;
-
   /**
    * Get current bias of this line.
    *
@@ -256,6 +269,7 @@ final class Line {
    */
   public function setValue(int $value): void {}
 }
+
 /**
  * Represents multiple GPIO lines.
  */
@@ -339,3 +353,4 @@ final class Lines implements \Countable, \ArrayAccess, \Iterator {
    */
   public function valid(): bool {}
 }
+
