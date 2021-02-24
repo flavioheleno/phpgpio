@@ -7,60 +7,6 @@ namespace GPIO;
  */
 final class Line {
   /**
-   * Line's bias state is unknown.
-   * @var int
-   */
-  public const BIAS_UNKNOWN = 1;
-
-  /**
-   * Line's internal bias is disabled.
-   * @var int
-   */
-  public const BIAS_DISABLED = 2;
-
-  /**
-   * Line's internal pull-up bias is enabled.
-   * @var int
-   */
-  public const BIAS_PULL_UP = 3;
-
-  /**
-   * Line's internal pull-down bias is enabled.
-   * @var int
-   */
-  public const BIAS_PULL_DOWN = 4;
-
-  /**
-   * Line's direction setting is input.
-   * @var int
-   */
-  public const DIRECTION_INPUT = 1;
-
-  /**
-   * Line's direction setting is output.
-   * @var int
-   */
-  public const DIRECTION_OUTPUT = 2;
-
-  /**
-   * Drive setting is unknown.
-   * @var int
-   */
-  public const DRIVE_PUSH_PULL = 1;
-
-  /**
-   * Line output is open-drain.
-   * @var int
-   */
-  public const DRIVE_OPEN_DRAIN = 2;
-
-  /**
-   * Line output is open-source.
-   * @var int
-   */
-  public const DRIVE_OPEN_SOURCE = 3;
-
-  /**
    * Get current bias of this line.
    *
    * @return int

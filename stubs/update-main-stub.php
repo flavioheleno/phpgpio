@@ -1,19 +1,12 @@
 <?php
 
 try {
-  // open a temporary file to be used during content processing
-  $tmpFile = tempnam(sys_get_temp_dir(), 'phpgpio');
-  $handle = fopen($tmpFile, 'w');
-  assert(
-    is_resource($handle),
-    new RuntimeException('Failed to open temporary file!')
-  );
-
   // hold a reference to the script name
   $self = basename($argv[0]);
 
-  // write stub header
-  fileHeader($handle);
+  // list of stub files
+  $stubFiles = [];
+
   $di = new DirectoryIterator(__DIR__);
   foreach ($di as $item) {
     // ensure that the current item is a file
@@ -26,10 +19,35 @@ try {
       continue;
     }
 
-    // extract item's content
-    $content = file($item->getPathname(), FILE_IGNORE_NEW_LINES);
+    // ensure that only php files are being processed
+    if (substr($item->getFilename(), -4) !== '.php') {
+      continue;
+    }
 
-    // write content to stub
+    $stubFiles[$item->getFilename()] = $item->getPathname();
+  }
+
+  // open a temporary file to be used during content processing
+  $tmpFile = tempnam(sys_get_temp_dir(), 'phpgpio');
+  $handle = fopen($tmpFile, 'w');
+  assert(
+    is_resource($handle),
+    new RuntimeException('Failed to open temporary file!')
+  );
+
+  // write stub header
+  fileHeader($handle);
+
+  // guarantee the final stub generated will be consistent
+  ksort($stubFiles);
+
+  foreach ($stubFiles as $fileName => $stubFile) {
+    echo 'Processing ', $fileName, PHP_EOL;
+
+    // extract stub file content
+    $content = file($stubFile, FILE_IGNORE_NEW_LINES);
+
+    // write content to temporary file
     fileContent($handle, $content);
   }
 
@@ -45,19 +63,24 @@ try {
   echo 'Error! ', $exception->getMessage(), PHP_EOL;
 }
 
-function fileHeader($stub): void {
-  fwrite($stub, '<?php');
-  fwrite($stub, "\n\n");
-  fwrite($stub, '/** @generate-function-entries */');
-  fwrite($stub, "\n\n");
-  fwrite($stub, 'namespace GPIO;');
-  fwrite($stub, "\n\n");
+function fileHeader($handle): void {
+  fwrite($handle, '<?php');
+  fwrite($handle, "\n\n");
+  fwrite($handle, '/** @generate-function-entries */');
+  fwrite($handle, "\n\n");
+  fwrite($handle, 'namespace GPIO;');
+  fwrite($handle, "\n\n");
 }
 
-function fileContent($stub, array $content): void {
+function fileContent($handle, array $content): void {
+  assert(
+    $content[0] === '<?php',
+    new RuntimeException('Trying to process a non-php file!')
+  );
+
   $lines  = count($content);
   $marker = false;
-  for ($i = 0; $i < $lines; $i++) {
+  for ($i = 1; $i < $lines; $i++) {
     if (strpos($content[$i], 'namespace') !== false) {
       $marker = true;
 
@@ -69,6 +92,6 @@ function fileContent($stub, array $content): void {
     }
   }
 
-  fwrite($stub, implode("\n", array_slice($content, $i)));
-  fwrite($stub, "\n");
+  fwrite($handle, implode("\n", array_slice($content, $i)));
+  fwrite($handle, "\n\n");
 }

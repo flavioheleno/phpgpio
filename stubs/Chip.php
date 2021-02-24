@@ -16,13 +16,20 @@ final class Chip {
   public static function isDevice(string $path): bool {}
 
   /**
-   * Opens the chip using chip::open.
+   * Opens the chip.
    *
    * @param string $path Path to the GPIO chip device.
    *
    * @return void
    */
   public function __construct(string $path) {}
+
+  /**
+   * Closes the chip.
+   *
+   * @return void
+   */
+  public function __destruct() {}
 
   /**
    * Find all GPIO lines by name among lines exposed by this GPIO chip.
