@@ -19,6 +19,13 @@
 
   #include "php.h"
 
+  // internal object data holder
+  typedef struct _chipObject chipObject;
+
+  // class registration
   zend_class_entry* registerChipClass();
+
+  // handle chipObject creation
+  static zend_object *chipCreateObject(zend_class_entry *zceClass);
 
 #endif

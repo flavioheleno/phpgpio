@@ -36,7 +36,7 @@
   extern PHPAPI zend_class_entry *zceChip;
   extern PHPAPI zend_class_entry *zceException;
   extern PHPAPI zend_class_entry *zceLine;
-  extern PHPAPI zend_class_entry *zceLines;
+  extern PHPAPI zend_class_entry *zceBulk;
 
   END_EXTERN_C()
 

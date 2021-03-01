@@ -28,5 +28,5 @@ if test "$PHP_PHPGPIO" != "no"; then
 
   AC_DEFINE(HAVE_PHPGPIO, 1, [ Have phpgpio support ])
 
-  PHP_NEW_EXTENSION(phpgpio, phpgpio.c src/line.c src/lines.c src/exception.c src/chip.c, $ext_shared)
+  PHP_NEW_EXTENSION(phpgpio, phpgpio.c src/common.c src/line.c src/bulk.c src/exception.c src/chip.c, $ext_shared)
 fi

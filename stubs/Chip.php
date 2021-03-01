@@ -7,6 +7,13 @@ namespace GPIO;
  */
 final class Chip {
   /**
+   * Path to the GPIO chip device.
+   *
+   * @var string
+   */
+  private string $path;
+
+  /**
    * Returns if the given path is a valid GPIO chip device.
    *
    * @param string $path Path to the device.
@@ -25,28 +32,30 @@ final class Chip {
   public function __construct(string $path) {}
 
   /**
-   * Closes the chip.
+   * Find all GPIO lines by name among lines exposed by this GPIO chip.
+   * Note: Throws an error if multiple lines match the name.
    *
-   * @return void
+   * @param string $name Line name.
+   *
+   * @return \GPIO\Line
    */
-  public function __destruct() {}
+  public function findLineUnique(string $name): Line {}
 
   /**
    * Find all GPIO lines by name among lines exposed by this GPIO chip.
    *
-   * @param string $name   Line name.
-   * @param bool   $unique If set to true: throw an error if multiple lines match the name.
+   * @param string $name Line name.
    *
-   * @return \GPIO\Lines
+   * @return \GPIO\Bulk
    */
-  public function findLine(string $name, bool $unique): Lines {}
+  public function findAllLines(string $name): Bulk {}
 
   /**
    * Get all lines exposed by this chip.
    *
-   * @return \GPIO\Lines
+   * @return \GPIO\Bulk
    */
-  public function getAllLines(): Lines {}
+  public function getAllLines(): Bulk {}
 
   /**
    * Get the line exposed by this chip at given offset.
@@ -62,9 +71,23 @@ final class Chip {
    *
    * @param int[] $offsets Vector of line offsets.
    *
-   * @return \GPIO\Lines
+   * @return \GPIO\Bulk
    */
-  public function getLines(array $offsets): Lines {}
+  public function getLines(array $offsets): Bulk {}
+
+  /**
+   * Return the number of available lines.
+   *
+   * @return int
+   */
+  public function getLineCount(): int {}
+
+  /**
+   * Return the path to the GPIO chip device.
+   *
+   * @return string
+   */
+  public function getPath(): string {}
 
   /**
    * Return the label of the chip held by this object.

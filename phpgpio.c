@@ -24,9 +24,11 @@
 #include "phpgpio_arginfo.h"
 
 #include "src/line.h"
-#include "src/lines.h"
+#include "src/bulk.h"
 #include "src/exception.h"
 #include "src/chip.h"
+
+#include <gpiod.h>
 
 /* For compatibility with older PHP versions */
 #ifndef ZEND_PARSE_PARAMETERS_NONE
@@ -39,7 +41,7 @@
 PHPAPI zend_class_entry *zceChip;
 PHPAPI zend_class_entry *zceException;
 PHPAPI zend_class_entry *zceLine;
-PHPAPI zend_class_entry *zceLines;
+PHPAPI zend_class_entry *zceBulk;
 
 /* {{{ PHP_RINIT_FUNCTION */
 PHP_RINIT_FUNCTION(phpgpio) {
@@ -66,7 +68,7 @@ PHP_MINIT_FUNCTION(phpgpio) {
 
   /* Class Registration (from each *.h file) */
   zceLine = registerLineClass();
-  zceLines = registerLinesClass();
+  zceBulk = registerBulkClass();
   zceException = registerExceptionClass();
   zceChip = registerChipClass();
 }
@@ -76,7 +78,8 @@ PHP_MINIT_FUNCTION(phpgpio) {
 PHP_MINFO_FUNCTION(phpgpio) {
   php_info_print_table_start();
   php_info_print_table_header(2, "phpgpio support", "enabled");
-  php_info_print_table_row(2, "Version", PHP_PHPGPIO_VERSION);
+  php_info_print_table_row(2, "Extension version", PHP_PHPGPIO_VERSION);
+  php_info_print_table_row(2, "Library version", gpiod_version_string());
   php_info_print_table_end();
 }
 /* }}} */

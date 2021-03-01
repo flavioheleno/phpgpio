@@ -14,20 +14,11 @@
    +----------------------------------------------------------------------+
 */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
+#ifndef PHPGPIO_COMMON_H
+#define PHPGPIO_COMMON_H
+
+  #include "php.h"
+
+  void *objectAlloc(size_t objSize, zend_class_entry *classEntry);
+
 #endif
-
-#include "exception.h"
-#include "phpgpio_arginfo.h"
-#include "zend_exceptions.h"
-
-zend_class_entry* registerExceptionClass() {
-  zend_class_entry ce, *class_entry;
-
-  INIT_NS_CLASS_ENTRY(ce, "GPIO", "Exception", class_GPIO_Exception_methods);
-  // GPIO\Exception extends \Error (zend_ce_error)
-  class_entry = zend_register_internal_class_ex(&ce, zend_ce_error);
-
-  return class_entry;
-}

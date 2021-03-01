@@ -5,9 +5,100 @@
 namespace GPIO;
 
 /**
+ * Represents multiple GPIO lines.
+ */
+final class Bulk implements \Countable, \ArrayAccess, \Iterator {
+  /**
+   * Count elements of an object
+   *
+   * @return void
+   */
+  public function count(): int {}
+
+  /**
+   * Whether or not an offset exists.
+   *
+   * @param mixed $offset An offset to check for.
+   *
+   * @return bool
+   */
+  public function offsetExists($offset): bool {}
+
+  /**
+   * Returns the value at specified offset.
+   *
+   * @param mixed $offset The offset to retrieve.
+   *
+   * @return mixed
+   */
+  public function offsetGet($offset) {}
+
+  /**
+   * Assigns a value to the specified offset.
+   *
+   * @param mixed $offset The offset to assign the value to.
+   * @param mixed $value  The value to set.
+   *
+   * @return void
+   */
+  public function offsetSet($offset, $value) {}
+
+  /**
+   * Unsets an offset.
+   *
+   * @param mixed $offset The offset to unset.
+   *
+   * @return void
+   */
+  public function offsetUnset($offset) {}
+
+  /**
+   * Returns the current element.
+   *
+   * @return mixed
+   */
+  public function current() {}
+
+  /**
+   * Returns the key of the current element.
+   *
+   * @return mixed
+   */
+  public function key() {}
+
+  /**
+   * Moves the current position to the next element.
+   *
+   * @return void
+   */
+  public function next(): void {}
+
+  /**
+   * Rewinds back to the first element of the Iterator.
+   *
+   * @return void
+   */
+  public function rewind(): void {}
+
+  /**
+   * Check if the current position is valid.
+   *
+   * @return bool
+   */
+  public function valid(): bool {}
+}
+
+/**
  * Represents a GPIO chip.
  */
 final class Chip {
+  /**
+   * Path to the GPIO chip device.
+   *
+   * @var string
+   */
+  private string $path;
+
   /**
    * Returns if the given path is a valid GPIO chip device.
    *
@@ -27,28 +118,30 @@ final class Chip {
   public function __construct(string $path) {}
 
   /**
-   * Closes the chip.
+   * Find all GPIO lines by name among lines exposed by this GPIO chip.
+   * Note: Throws an error if multiple lines match the name.
    *
-   * @return void
+   * @param string $name Line name.
+   *
+   * @return \GPIO\Line
    */
-  public function __destruct() {}
+  public function findLineUnique(string $name): Line {}
 
   /**
    * Find all GPIO lines by name among lines exposed by this GPIO chip.
    *
-   * @param string $name   Line name.
-   * @param bool   $unique If set to true: throw an error if multiple lines match the name.
+   * @param string $name Line name.
    *
-   * @return \GPIO\Lines
+   * @return \GPIO\Bulk
    */
-  public function findLine(string $name, bool $unique): Lines {}
+  public function findAllLines(string $name): Bulk {}
 
   /**
    * Get all lines exposed by this chip.
    *
-   * @return \GPIO\Lines
+   * @return \GPIO\Bulk
    */
-  public function getAllLines(): Lines {}
+  public function getAllLines(): Bulk {}
 
   /**
    * Get the line exposed by this chip at given offset.
@@ -64,9 +157,23 @@ final class Chip {
    *
    * @param int[] $offsets Vector of line offsets.
    *
-   * @return \GPIO\Lines
+   * @return \GPIO\Bulk
    */
-  public function getLines(array $offsets): Lines {}
+  public function getLines(array $offsets): Bulk {}
+
+  /**
+   * Return the number of available lines.
+   *
+   * @return int
+   */
+  public function getLineCount(): int {}
+
+  /**
+   * Return the path to the GPIO chip device.
+   *
+   * @return string
+   */
+  public function getPath(): string {}
 
   /**
    * Return the label of the chip held by this object.
@@ -146,6 +253,13 @@ class Exception extends \Error {}
  * Represents a single GPIO line.
  */
 final class Line {
+  /**
+   * Parent chip.
+   *
+   * @var \GPIO\Chip
+   */
+  private Chip $chip;
+
   /**
    * Get current bias of this line.
    *
@@ -232,14 +346,6 @@ final class Line {
   public function request(LineRequest $lineRequest, int $default = 0): void {}
 
   /**
-   * Reset the state of this object.
-   *
-   * This is useful when the user needs to e.g. keep the line_event object but wants to drop the reference to the GPIO
-   * chip indirectly held by the line being the source of the event.
-   */
-  public function reset(): void {}
-
-  /**
    * Set configuration of this line.
    *
    * @param int $direction New direction.
@@ -268,89 +374,5 @@ final class Line {
    * @param int $value New value (0 or 1).
    */
   public function setValue(int $value): void {}
-}
-
-/**
- * Represents multiple GPIO lines.
- */
-final class Lines implements \Countable, \ArrayAccess, \Iterator {
-  /**
-   * Count elements of an object
-   *
-   * @return void
-   */
-  public function count(): int {}
-
-  /**
-   * Whether or not an offset exists.
-   *
-   * @param mixed $offset An offset to check for.
-   *
-   * @return bool
-   */
-  public function offsetExists($offset): bool {}
-
-  /**
-   * Returns the value at specified offset.
-   *
-   * @param mixed $offset The offset to retrieve.
-   *
-   * @return mixed
-   */
-  public function offsetGet($offset) {}
-
-  /**
-   * Assigns a value to the specified offset.
-   *
-   * @param mixed $offset The offset to assign the value to.
-   * @param mixed $value  The value to set.
-   *
-   * @return void
-   */
-  public function offsetSet($offset, $value) {}
-
-  /**
-   * Unsets an offset.
-   *
-   * @param mixed $offset The offset to unset.
-   *
-   * @return void
-   */
-  public function offsetUnset($offset) {}
-
-  /**
-   * Returns the current element.
-   *
-   * @return mixed
-   */
-  public function current() {}
-
-  /**
-   * Returns the key of the current element.
-   *
-   * @return mixed
-   */
-  public function key() {}
-
-  /**
-   * Moves the current position to the next element.
-   *
-   * @return void
-   */
-  public function next(): void {}
-
-  /**
-   * Rewinds back to the first element of the Iterator.
-   *
-   * @return void
-   */
-  public function rewind(): void {}
-
-  /**
-   * Check if the current position is valid.
-   *
-   * @return bool
-   */
-  public function valid(): bool {}
 }
 

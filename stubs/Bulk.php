@@ -5,7 +5,7 @@ namespace GPIO;
 /**
  * Represents multiple GPIO lines.
  */
-final class Lines implements \Countable, \ArrayAccess, \Iterator {
+final class Bulk implements \Countable, \ArrayAccess, \Iterator {
   /**
    * Count elements of an object
    *

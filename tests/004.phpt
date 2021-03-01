@@ -11,7 +11,7 @@ if (!extension_loaded('phpgpio')) {
 var_dump(class_exists('GPIO\\Chip'));
 var_dump(class_exists('GPIO\\Exception'));
 var_dump(class_exists('GPIO\\Line'));
-var_dump(class_exists('GPIO\\Lines'));
+var_dump(class_exists('GPIO\\Bulk'));
 ?>
 --EXPECT--
 bool(true)

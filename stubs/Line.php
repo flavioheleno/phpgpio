@@ -7,6 +7,13 @@ namespace GPIO;
  */
 final class Line {
   /**
+   * Parent chip.
+   *
+   * @var \GPIO\Chip
+   */
+  private Chip $chip;
+
+  /**
    * Get current bias of this line.
    *
    * @return int
@@ -90,14 +97,6 @@ final class Line {
    * @param int               $default Default value (only matters for OUTPUT direction).
    */
   public function request(LineRequest $lineRequest, int $default = 0): void {}
-
-  /**
-   * Reset the state of this object.
-   *
-   * This is useful when the user needs to e.g. keep the line_event object but wants to drop the reference to the GPIO
-   * chip indirectly held by the line being the source of the event.
-   */
-  public function reset(): void {}
 
   /**
    * Set configuration of this line.
