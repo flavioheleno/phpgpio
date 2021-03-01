@@ -17,8 +17,12 @@ var_dump(defined('GPIO\\DIRECTION_OUTPUT'));
 var_dump(defined('GPIO\\DRIVE_PUSH_PULL'));
 var_dump(defined('GPIO\\DRIVE_OPEN_DRAIN'));
 var_dump(defined('GPIO\\DRIVE_OPEN_SOURCE'));
+var_dump(defined('GPIO\\EXTENSION_VERSION'));
+var_dump(defined('GPIO\\LIBRARY_VERSION'));
 ?>
 --EXPECT--
+bool(true)
+bool(true)
 bool(true)
 bool(true)
 bool(true)

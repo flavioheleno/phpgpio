@@ -265,28 +265,28 @@ final class Line {
    *
    * @return int
    */
-  public function bias(): int {}
+  public function getBias(): int {}
 
   /**
    * Get the consumer of this line (if any).
    *
    * @return string
    */
-  public function consumer(): string {}
+  public function getConsumer(): string {}
 
   /**
    * Get current direction of this line.
    *
    * @return int
    */
-  public function direction(): int {}
+  public function getDirection(): int {}
 
   /**
    * Get current drive setting of this line.
    *
    * @return int
    */
-  public function drive(): int {}
+  public function getDrive(): int {}
 
   /**
    * Get the parent chip.
@@ -328,14 +328,14 @@ final class Line {
    *
    * @return string
    */
-  public function name(): string {}
+  public function getName(): string {}
 
   /**
    * Get the offset of this line.
    *
    * @return int
    */
-  public function offset(): int {}
+  public function getOffset(): int {}
 
   /**
    * Request this line.

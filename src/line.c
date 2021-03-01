@@ -136,28 +136,28 @@ void lineSetData(zend_object *obj, struct gpiod_line *line) {
 /* PHP Visible Methods          */
 /********************************/
 
-PHP_METHOD(GPIO_Line, bias) {
+PHP_METHOD(GPIO_Line, getBias) {
   ZEND_PARSE_PARAMETERS_NONE();
 
   lineObject *lineInstance = getLineObject(Z_OBJ_P(ZEND_THIS));
   RETURN_LONG(gpiod_line_bias(lineInstance->line));
 }
 
-PHP_METHOD(GPIO_Line, consumer) {
+PHP_METHOD(GPIO_Line, getConsumer) {
   ZEND_PARSE_PARAMETERS_NONE();
 
   lineObject *lineInstance = getLineObject(Z_OBJ_P(ZEND_THIS));
   RETURN_STRING(gpiod_line_consumer(lineInstance->line));
 }
 
-PHP_METHOD(GPIO_Line, direction) {
+PHP_METHOD(GPIO_Line, getDirection) {
   ZEND_PARSE_PARAMETERS_NONE();
 
   lineObject *lineInstance = getLineObject(Z_OBJ_P(ZEND_THIS));
   RETURN_LONG(gpiod_line_direction(lineInstance->line));
 }
 
-PHP_METHOD(GPIO_Line, drive) {
+PHP_METHOD(GPIO_Line, getDrive) {
   ZEND_PARSE_PARAMETERS_NONE();
 
   lineObject *lineInstance = getLineObject(Z_OBJ_P(ZEND_THIS));
@@ -198,14 +198,14 @@ PHP_METHOD(GPIO_Line, isUsed) {
   RETURN_BOOL(gpiod_line_is_used(lineInstance->line));
 }
 
-PHP_METHOD(GPIO_Line, name) {
+PHP_METHOD(GPIO_Line, getName) {
   ZEND_PARSE_PARAMETERS_NONE();
 
   lineObject *lineInstance = getLineObject(Z_OBJ_P(ZEND_THIS));
   RETURN_STRING(gpiod_line_name(lineInstance->line));
 }
 
-PHP_METHOD(GPIO_Line, offset) {
+PHP_METHOD(GPIO_Line, getOffset) {
   ZEND_PARSE_PARAMETERS_NONE();
 
   lineObject *lineInstance = getLineObject(Z_OBJ_P(ZEND_THIS));
