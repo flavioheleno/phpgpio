@@ -46,6 +46,7 @@ static inline chipObject *getChipObject(zend_object *obj) {
   return (chipObject *)((char *)(obj) - XtOffsetOf(chipObject, zendObject));
 }
 
+// handle chipObject creation
 static zend_object *chipCreateObject(zend_class_entry *zceClass) {
   chipObject *chipInstance = objectAlloc(sizeof(chipObject), zceClass);
 

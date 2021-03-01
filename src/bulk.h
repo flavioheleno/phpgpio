@@ -21,15 +21,19 @@
 
   #include <gpiod.h>
 
+  BEGIN_EXTERN_C()
+
   // internal object data holder
   typedef struct _bulkObject bulkObject;
 
   // class registration
-  zend_class_entry* registerBulkClass();
+  extern zend_class_entry* registerBulkClass();
 
   // handle bulkObject creation
-  static zend_object *bulkCreateObject(zend_class_entry *zceClass);
+  extern zend_object *bulkCreateObject(zend_class_entry *zceClass);
   // sets the internal bulkObject data
-  static void bulkSetData(zend_object *obj, struct gpiod_line_bulk *bulk);
+  extern void bulkSetData(zend_object *obj, struct gpiod_line_bulk *bulk);
+
+  END_EXTERN_C()
 
 #endif

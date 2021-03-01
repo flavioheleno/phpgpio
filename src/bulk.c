@@ -101,7 +101,7 @@ zend_class_entry* registerBulkClass() {
   return classEntry;
 }
 
-static zend_object *bulkCreateObject(zend_class_entry *zceClass) {
+zend_object *bulkCreateObject(zend_class_entry *zceClass) {
   bulkObject *bulkInstance = objectAlloc(sizeof(bulkObject), zceClass);
 
   zend_object_std_init(&bulkInstance->zendObject, zceClass);
@@ -113,7 +113,7 @@ static zend_object *bulkCreateObject(zend_class_entry *zceClass) {
   return &bulkInstance->zendObject;
 }
 
-static void bulkSetData(zend_object *obj, struct gpiod_line_bulk *bulk) {
+void bulkSetData(zend_object *obj, struct gpiod_line_bulk *bulk) {
   bulkObject *bulkInstance = getBulkObject(obj);
   bulkInstance->bulk = bulk;
 }

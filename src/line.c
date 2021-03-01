@@ -115,7 +115,7 @@ zend_class_entry* registerLineClass() {
   return classEntry;
 }
 
-static zend_object *lineCreateObject(zend_class_entry *zceClass) {
+zend_object *lineCreateObject(zend_class_entry *zceClass) {
   lineObject *lineInstance = objectAlloc(sizeof(lineObject), zceClass);
 
   zend_object_std_init(&lineInstance->zendObject, zceClass);
@@ -127,7 +127,7 @@ static zend_object *lineCreateObject(zend_class_entry *zceClass) {
   return &lineInstance->zendObject;
 }
 
-static void lineSetData(zend_object *obj, struct gpiod_line *line) {
+void lineSetData(zend_object *obj, struct gpiod_line *line) {
   lineObject *lineInstance = getLineObject(obj);
   lineInstance->line = line;
 }

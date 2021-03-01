@@ -21,15 +21,19 @@
 
   #include <gpiod.h>
 
+  BEGIN_EXTERN_C()
+
   // internal object data holder
   typedef struct _lineObject lineObject;
 
   // class registration
-  zend_class_entry* registerLineClass();
+  extern zend_class_entry* registerLineClass();
 
   // handle lineObject creation
-  static zend_object *lineCreateObject(zend_class_entry *zceClass);
+  extern zend_object *lineCreateObject(zend_class_entry *zceClass);
   // sets the internal lineObject data
-  static void lineSetData(zend_object *obj, struct gpiod_line *line);
+  extern void lineSetData(zend_object *obj, struct gpiod_line *line);
+
+  END_EXTERN_C()
 
 #endif
