@@ -1,0 +1,40 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  run:
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: ["armv6", "armv7", "aarch64", "amd64"]
+        php: ["7.4", "8.0", "8.1"]
+        lib: ["v1.0.x", "v1.1.x", "v1.2.x", "v1.3.x", "v1.4.x", "v1.5.x", "v1.6.x", "master"]
+        type: ["ts", "nts"]
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build libgpiod
+      run: |
+        sudo apt-get update
+        sudo apt-get install build-essential autoconf autoconf-archive libtool pkg-config -y
+        git clone git://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git --branch ${{ matrix.lib }}
+        cd libgpiod
+        ./autogen.sh
+        make
+        sudo make install
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php }}
+      env:
+        phpts: ${{ matrix.type }}
+        update: true
+
+    - name: Build phpgpio
+      run: |
+        phpize
+        ./configure
+        make
+        make test
