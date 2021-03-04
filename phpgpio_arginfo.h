@@ -1,5 +1,8 @@
 /* This is a generated file, edit the .stub.php file instead.
- * Stub hash: abdd7507b0864b5eb35caf35d217bfec171f5f29 */
+ * Stub hash: 8a4c570217fe0e55efebf82b5d01bff8b3ecae2b */
+
+ZEND_BEGIN_ARG_WITH_RETURN_OBJ_INFO_EX(arginfo_class_GPIO_Bulk_getChip, 0, 0, GPIO\\Chip, 0)
+ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_GPIO_Bulk_count, 0, 0, IS_LONG, 0)
 ZEND_END_ARG_INFO()
@@ -76,8 +79,7 @@ ZEND_END_ARG_INFO()
 
 #define arginfo_class_GPIO_Line_getDrive arginfo_class_GPIO_Bulk_count
 
-ZEND_BEGIN_ARG_WITH_RETURN_OBJ_INFO_EX(arginfo_class_GPIO_Line_getChip, 0, 0, GPIO\\Chip, 0)
-ZEND_END_ARG_INFO()
+#define arginfo_class_GPIO_Line_getChip arginfo_class_GPIO_Bulk_getChip
 
 #define arginfo_class_GPIO_Line_getValue arginfo_class_GPIO_Bulk_count
 
@@ -115,6 +117,7 @@ ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_GPIO_Line_setValue, 0, 1, 
 ZEND_END_ARG_INFO()
 
 
+ZEND_METHOD(GPIO_Bulk, getChip);
 ZEND_METHOD(GPIO_Bulk, count);
 ZEND_METHOD(GPIO_Bulk, offsetExists);
 ZEND_METHOD(GPIO_Bulk, offsetGet);
@@ -155,6 +158,7 @@ ZEND_METHOD(GPIO_Line, setValue);
 
 
 static const zend_function_entry class_GPIO_Bulk_methods[] = {
+	ZEND_ME(GPIO_Bulk, getChip, arginfo_class_GPIO_Bulk_getChip, ZEND_ACC_PUBLIC)
 	ZEND_ME(GPIO_Bulk, count, arginfo_class_GPIO_Bulk_count, ZEND_ACC_PUBLIC)
 	ZEND_ME(GPIO_Bulk, offsetExists, arginfo_class_GPIO_Bulk_offsetExists, ZEND_ACC_PUBLIC)
 	ZEND_ME(GPIO_Bulk, offsetGet, arginfo_class_GPIO_Bulk_offsetGet, ZEND_ACC_PUBLIC)

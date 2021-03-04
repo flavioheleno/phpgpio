@@ -2,8 +2,8 @@
 Test GPIO\Bulk constructor restriction
 --SKIPIF--
 <?php
-if (!extension_loaded('phpgpio')) {
-  echo 'skip';
+if (! extension_loaded('phpgpio')) {
+  exit('skip');
 }
 ?>
 --FILE--

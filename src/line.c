@@ -19,12 +19,13 @@
 #endif
 
 #include "line.h"
-#include "common.h"
+#include "chip.h"
+#include "phpgpio.h"
 #include "phpgpio_arginfo.h"
 #include "zend_interfaces.h"
 #include "zend_object_handlers.h"
 
-// zend_object wrapper to ensure gpiod_line is handled properly
+/* zend_object wrapper to ensure gpiod_line is handled properly */
 struct _lineObject {
   struct gpiod_line *line;
   zend_object zendObject;
@@ -36,33 +37,40 @@ static zend_object_handlers lineObjectHandlers;
 /* Extension's Internal Methods */
 /********************************/
 
-// retrieve a lineObject pointer from a zend_object pointer
+/* retrieve a lineObject pointer from a zend_object pointer */
 static inline lineObject *getLineObject(zend_object *obj) {
   return (lineObject *)((char *)(obj) - XtOffsetOf(lineObject, zendObject));
 }
 
-// handle lineObject release
-static void lineDestroyObject(zend_object *obj) {
+/* handle lineObject release */
+static void lineFreeObject(zend_object *obj) {
   lineObject *lineInstance = getLineObject(obj);
 
-  // if the line pointer was set, check if line was requested and release it if needed
-  if (lineInstance->line != NULL) {
-    if (gpiod_line_is_requested(lineInstance->line)) {
-      gpiod_line_release(lineInstance->line);
-    }
+  /* failure to retrieve line instance (edge case?) */
+  if (lineInstance == NULL) {
+    return;
+  }
 
+  /* check if the line was requested and release it if needed */
+  if (lineInstance->line != NULL) {
+    gpiod_line_release(lineInstance->line);
     lineInstance->line = NULL;
   }
 
-  // standard destructor
+  /* release lineInstance->zendObject */
   zend_object_std_dtor(&lineInstance->zendObject);
 }
 
-// custom __construct handler
+/* custom __construct handler */
 static zend_function *getConstructorObjectHandler(zend_object *obj) {
   zend_throw_error(NULL, "Cannot directly construct GPIO\\Line");
 
   return NULL;
+}
+
+/* custom unset($inst->prop) handler */
+static void unsetPropertyObjectHandler(zend_object *object, zend_string *offset, void **cache_slot) {
+  zend_throw_error(NULL, "Cannot unset GPIO\\Line property");
 }
 
 /********************************/
@@ -72,36 +80,38 @@ static zend_function *getConstructorObjectHandler(zend_object *obj) {
 zend_class_entry* registerLineClass() {
   zend_class_entry ce, *classEntry;
 
-  INIT_NS_CLASS_ENTRY(ce, "GPIO", "Line", class_GPIO_Line_methods);
+  INIT_CLASS_ENTRY(ce, "GPIO\\Line", class_GPIO_Line_methods);
   classEntry = zend_register_internal_class(&ce);
-  // Final class / Objects of this class may not have dynamic properties
+  /* Final class / Objects of this class may not have dynamic properties */
   classEntry->ce_flags |= ZEND_ACC_FINAL | ZEND_ACC_NO_DYNAMIC_PROPERTIES;
-  // intercept object creation to change object handlers
+  /* intercept object creation to change object handlers */
   classEntry->create_object = lineCreateObject;
-  // disable serialization
+  /* disable serialization */
   classEntry->serialize = zend_class_serialize_deny;
-  // disable unserialization
+  /* disable unserialization */
   classEntry->unserialize = zend_class_unserialize_deny;
 
-  // initialize lineObjectHandlers with standard object handlers
+  /* initialize lineObjectHandlers with standard object handlers */
   memcpy(&lineObjectHandlers, zend_get_std_object_handlers(), sizeof(zend_object_handlers));
 
-  // disable "new GPIO\Line()" calls
+  /* disable "new GPIO\Line()" calls */
   lineObjectHandlers.get_constructor = getConstructorObjectHandler;
-  // disable object cloning
+  /* disable object cloning */
   lineObjectHandlers.clone_obj = NULL;
-  // Handler for objects that cannot be meaningfully compared.
-  // lineObjectHandlers.compare = zend_objects_not_comparable;
-  // not yet sure what this sets
+  /* Handler for objects that cannot be meaningfully compared. */
+  /* lineObjectHandlers.compare = zend_objects_not_comparable; */
+  /* not yet sure what this sets */
   lineObjectHandlers.offset   = XtOffsetOf(lineObject, zendObject);
-  // hook the object release
-  lineObjectHandlers.free_obj = lineDestroyObject;
+  /* hook the object release */
+  lineObjectHandlers.free_obj = lineFreeObject;
+  /* hook the object property unset */
+  lineObjectHandlers.unset_property = unsetPropertyObjectHandler;
 
   zval propChipDefaultValue;
-  // default property value (undefined)
+  /* default property value (undefined) */
   ZVAL_UNDEF(&propChipDefaultValue);
   zend_string *propChipName = zend_string_init("chip", sizeof("chip") - 1, false);
-  // private GPIO\Chip $chip
+  /* private GPIO\Chip $chip */
   zend_declare_typed_property(
     classEntry,
     propChipName,
@@ -116,12 +126,12 @@ zend_class_entry* registerLineClass() {
 }
 
 zend_object *lineCreateObject(zend_class_entry *zceClass) {
-  lineObject *lineInstance = objectAlloc(sizeof(lineObject), zceClass);
+  lineObject *lineInstance = zend_object_alloc(sizeof(lineObject), zceClass);
 
   zend_object_std_init(&lineInstance->zendObject, zceClass);
   object_properties_init(&lineInstance->zendObject, zceClass);
 
-  // set object handlers
+  /* set object handlers */
   lineInstance->zendObject.handlers = &lineObjectHandlers;
 
   return &lineInstance->zendObject;
@@ -136,94 +146,146 @@ void lineSetData(zend_object *obj, struct gpiod_line *line) {
 /* PHP Visible Methods          */
 /********************************/
 
+/* {{{ GPIO\Line::getBias(): int */
 PHP_METHOD(GPIO_Line, getBias) {
   ZEND_PARSE_PARAMETERS_NONE();
 
   lineObject *lineInstance = getLineObject(Z_OBJ_P(ZEND_THIS));
+
   RETURN_LONG(gpiod_line_bias(lineInstance->line));
 }
+/* }}} */
 
+/* {{{ GPIO\Line::getConsumer(): string */
 PHP_METHOD(GPIO_Line, getConsumer) {
   ZEND_PARSE_PARAMETERS_NONE();
 
   lineObject *lineInstance = getLineObject(Z_OBJ_P(ZEND_THIS));
-  RETURN_STRING(gpiod_line_consumer(lineInstance->line));
-}
+  const char *consumer = gpiod_line_consumer(lineInstance->line);
+  if (consumer == NULL) {
+    RETURN_EMPTY_STRING();
+  }
 
+  RETURN_STRING(consumer);
+}
+/* }}} */
+
+/* {{{ GPIO\Line::getDirection(): int*/
 PHP_METHOD(GPIO_Line, getDirection) {
   ZEND_PARSE_PARAMETERS_NONE();
 
   lineObject *lineInstance = getLineObject(Z_OBJ_P(ZEND_THIS));
+
   RETURN_LONG(gpiod_line_direction(lineInstance->line));
 }
+/* }}} */
 
+/* {{{ GPIO\Line::getDrive(): int */
 PHP_METHOD(GPIO_Line, getDrive) {
   ZEND_PARSE_PARAMETERS_NONE();
 
   lineObject *lineInstance = getLineObject(Z_OBJ_P(ZEND_THIS));
+
   RETURN_LONG(gpiod_line_drive(lineInstance->line));
 }
+/* }}} */
 
+/* {{{ GPIO\Line::getChip(): GPIO\Chip */
 PHP_METHOD(GPIO_Line, getChip) {
   ZEND_PARSE_PARAMETERS_NONE();
 
-  // gpiod_line_get_chip(lineInstance->line);
-}
+  zval rv;
+  zval *obj = zend_read_property(zceLine, Z_OBJ_P(ZEND_THIS), "chip", sizeof("chip") - 1, true, &rv);
 
+  RETURN_OBJ(Z_OBJ_P(obj));
+}
+/* }}} */
+
+/* {{{ GPIO\Line::getValue(): int */
 PHP_METHOD(GPIO_Line, getValue) {
   ZEND_PARSE_PARAMETERS_NONE();
 
   lineObject *lineInstance = getLineObject(Z_OBJ_P(ZEND_THIS));
+
   RETURN_LONG(gpiod_line_get_value(lineInstance->line));
 }
+/* }}} */
 
+/* {{{ GPIO\Line::isActiveLow(): bool */
 PHP_METHOD(GPIO_Line, isActiveLow) {
   ZEND_PARSE_PARAMETERS_NONE();
 
   lineObject *lineInstance = getLineObject(Z_OBJ_P(ZEND_THIS));
+
   RETURN_BOOL(gpiod_line_is_active_low(lineInstance->line));
 }
+/* }}} */
 
+/* {{{ GPIO\Line::isRequested(): bool */
 PHP_METHOD(GPIO_Line, isRequested) {
   ZEND_PARSE_PARAMETERS_NONE();
 
   lineObject *lineInstance = getLineObject(Z_OBJ_P(ZEND_THIS));
+
   RETURN_BOOL(gpiod_line_is_requested(lineInstance->line));
 }
+/* }}} */
 
+/* {{{ GPIO\Line::isUsed(): bool */
 PHP_METHOD(GPIO_Line, isUsed) {
   ZEND_PARSE_PARAMETERS_NONE();
 
   lineObject *lineInstance = getLineObject(Z_OBJ_P(ZEND_THIS));
+
   RETURN_BOOL(gpiod_line_is_used(lineInstance->line));
 }
+/* }}} */
 
+/* {{{ GPIO\Line::getName(): string */
 PHP_METHOD(GPIO_Line, getName) {
   ZEND_PARSE_PARAMETERS_NONE();
 
   lineObject *lineInstance = getLineObject(Z_OBJ_P(ZEND_THIS));
-  RETURN_STRING(gpiod_line_name(lineInstance->line));
-}
+  const char *name = gpiod_line_name(lineInstance->line);
+  if (name == NULL) {
+    RETURN_EMPTY_STRING();
+  }
 
+  RETURN_STRING(name);
+}
+/* }}} */
+
+/* {{{ GPIO\Line::getOffset(): int */
 PHP_METHOD(GPIO_Line, getOffset) {
   ZEND_PARSE_PARAMETERS_NONE();
 
   lineObject *lineInstance = getLineObject(Z_OBJ_P(ZEND_THIS));
+
   RETURN_LONG(gpiod_line_offset(lineInstance->line));
 }
+/* }}} */
 
+/* {{{ GPIO\Line::request(LineRequest $lineRequest, int $default = 0): void */
 PHP_METHOD(GPIO_Line, request) {
 }
+/* }}} */
 
+/* {{{ GPIO\Line::setConfig(int $direction, int $flags, int $value = 0): void */
 PHP_METHOD(GPIO_Line, setConfig) {
 }
+/* }}} */
 
+/* {{{ GPIO\Line::setDirectionOutput(int $value = 0): void */
 PHP_METHOD(GPIO_Line, setDirectionOutput) {
 }
+/* }}} */
 
+/* {{{ GPIO\Line::setFlags(int $flags): void */
 PHP_METHOD(GPIO_Line, setFlags) {
 }
+/* }}} */
 
+/* {{{ GPIO\Line::setValue(int $value): void */
 PHP_METHOD(GPIO_Line, setValue) {
   zend_long value;
   ZEND_PARSE_PARAMETERS_START(1, 1)
@@ -233,3 +295,4 @@ PHP_METHOD(GPIO_Line, setValue) {
   lineObject *lineInstance = getLineObject(Z_OBJ_P(ZEND_THIS));
   gpiod_line_set_value(lineInstance->line, value);
 }
+/* }}} */

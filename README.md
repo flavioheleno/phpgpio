@@ -1,6 +1,11 @@
 # phpgpio
 
-A [libgpiod](https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/) wrapper for PHP
+Object-oriented PHP bindings for the [libgpiod](https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/) library
+
+## Requirements
+
+- PHP >= 8.0 (either NTS or TS version);
+- libgpiod >= 1.6
 
 ## Building
 
@@ -21,9 +26,11 @@ php stubs/update-main-stup.php
 
 Once the stub is updated, the regular build process can be executed.
 
+**Note:** The main stub file ([phpgpio.stub.php](phpgpio.stub.php)) is a generated file, edit the files on the [stubs](stubs/) folder instead.
+
 ## Constants
 
-All namespace defined constants can be seen in [Constants.php](stubs/Constants.php) stub.
+All namespace defined constants can be seen in the [Constants.php](stubs/Constants.php) stub.
 
 ## Classes
 
@@ -36,10 +43,22 @@ Class                                 | Description
 
 ## Tools
 
-Name                               | Description
------------------------------------|------------
-[gpiodetect](tools/gpiodetect.php) | List all GPIO chips, print their labels and number of GPIO lines.
-[gpioinfo](tools/gpioinfo.php)     | Print information about all lines of the specified GPIO chip(s) (or all gpiochips if none are specified).
+Name                                   | Description
+---------------------------------------|------------
+[gpiodetect.php](tools/gpiodetect.php) | List all GPIO chips, print their labels and number of GPIO lines.
+[gpioinfo.php](tools/gpioinfo.php)     | Print information about all lines of the specified GPIO chip(s) (or all gpiochips if none are specified).
+
+## Supported Hardware
+
+The table below lists the supported and tested chips.
+
+SoC                         | Model
+----------------------------|------
+[BCM2835](tests/014.phpt)   | [Raspberry Pi 1 and Zero](https://www.raspberrypi.org/documentation/hardware/raspberrypi/bcm2835/README.md)
+[BCM2836](tests/015.phpt)   | [Raspberry Pi 2](https://www.raspberrypi.org/documentation/hardware/raspberrypi/bcm2836/README.md)
+[BCM2837](tests/016.phpt)   | [Raspberry Pi 3 (and later Raspberry Pi 2)](https://www.raspberrypi.org/documentation/hardware/raspberrypi/bcm2837/README.md)
+[BCM2837B0](tests/017.phpt) | [Raspberry Pi 3B+ and 3A+](https://www.raspberrypi.org/documentation/hardware/raspberrypi/bcm2837b0/README.md)
+[BCM2711](tests/018.phpt)   | [Raspberry Pi 4B](https://www.raspberrypi.org/documentation/hardware/raspberrypi/bcm2711/README.md)
 
 ## License
 

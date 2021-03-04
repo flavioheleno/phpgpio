@@ -2,8 +2,8 @@
 Check if phpgpio is loaded
 --SKIPIF--
 <?php
-if (!extension_loaded('phpgpio')) {
-  echo 'skip';
+if (! extension_loaded('phpgpio')) {
+  exit('skip');
 }
 ?>
 --FILE--

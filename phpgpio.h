@@ -33,10 +33,10 @@
   BEGIN_EXTERN_C()
 
   /* Class entry pointers */
-  extern PHPAPI zend_class_entry *zceChip;
-  extern PHPAPI zend_class_entry *zceException;
-  extern PHPAPI zend_class_entry *zceLine;
-  extern PHPAPI zend_class_entry *zceBulk;
+  extern zend_class_entry *zceChip;
+  extern zend_class_entry *zceException;
+  extern zend_class_entry *zceLine;
+  extern zend_class_entry *zceBulk;
 
   END_EXTERN_C()
 

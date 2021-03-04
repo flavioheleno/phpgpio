@@ -7,6 +7,20 @@ namespace GPIO;
  */
 final class Bulk implements \Countable, \ArrayAccess, \Iterator {
   /**
+   * Parent chip instance.
+   *
+   * @var \GPIO\Chip
+   */
+  private Chip $chip;
+
+  /**
+   * Get the parent chip.
+   *
+   * @return \GPIO\Chip
+   */
+  public function getChip(): Chip {}
+
+  /**
    * Count elements of an object
    *
    * @return void

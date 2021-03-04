@@ -19,6 +19,11 @@
 
   #include "php.h"
 
-  zend_class_entry* registerExceptionClass();
+  BEGIN_EXTERN_C()
+
+  /* class registration */
+  extern zend_class_entry* registerExceptionClass();
+
+  END_EXTERN_C()
 
 #endif

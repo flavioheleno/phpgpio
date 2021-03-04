@@ -23,15 +23,15 @@
 
   BEGIN_EXTERN_C()
 
-  // internal object data holder
+  /* internal object data holder */
   typedef struct _lineObject lineObject;
 
-  // class registration
+  /* class registration */
   extern zend_class_entry* registerLineClass();
 
-  // handle lineObject creation
+  /* handle lineObject creation */
   extern zend_object *lineCreateObject(zend_class_entry *zceClass);
-  // sets the internal lineObject data
+  /* sets the internal lineObject data */
   extern void lineSetData(zend_object *obj, struct gpiod_line *line);
 
   END_EXTERN_C()

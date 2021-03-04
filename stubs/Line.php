@@ -7,7 +7,7 @@ namespace GPIO;
  */
 final class Line {
   /**
-   * Parent chip.
+   * Parent chip instance.
    *
    * @var \GPIO\Chip
    */

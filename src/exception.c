@@ -23,11 +23,11 @@
 #include "zend_exceptions.h"
 
 zend_class_entry* registerExceptionClass() {
-  zend_class_entry ce, *class_entry;
+  zend_class_entry ce, *classEntry;
 
-  INIT_NS_CLASS_ENTRY(ce, "GPIO", "Exception", class_GPIO_Exception_methods);
-  // GPIO\Exception extends \Error (zend_ce_error)
-  class_entry = zend_register_internal_class_ex(&ce, zend_ce_error);
+  INIT_CLASS_ENTRY(ce, "GPIO\\Exception", class_GPIO_Exception_methods);
+  /* GPIO\Exception extends \Error (zend_ce_error) */
+  classEntry = zend_register_internal_class_ex(&ce, zend_ce_error);
 
-  return class_entry;
+  return classEntry;
 }

@@ -19,13 +19,20 @@
 
   #include "php.h"
 
+  #include <gpiod.h>
+
   BEGIN_EXTERN_C()
 
-  // internal object data holder
+  /* internal object data holder */
   typedef struct _chipObject chipObject;
 
-  // class registration
+  /* class registration */
   extern zend_class_entry* registerChipClass();
+
+  /* handle chipObject creation */
+  extern zend_object *chipCreateObject(zend_class_entry *zceClass);
+  /* sets the internal chipObject data */
+  extern void chipSetData(zend_object *obj, struct gpiod_chip *chip);
 
   END_EXTERN_C()
 
