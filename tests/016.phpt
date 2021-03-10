@@ -6,6 +6,15 @@ if (! extension_loaded('phpgpio')) {
   exit('skip');
 }
 
+if (is_file('/sys/firmware/devicetree/base/model') === false) {
+  exit('skip');
+}
+
+$model = file_get_contents('/sys/firmware/devicetree/base/model');
+if (preg_match('/^Raspberry Pi [23]/', $model) !== 1) {
+  exit('skip');
+}
+
 if (GPIO\Chip::isDevice('/dev/gpiochip0') === false) {
   exit('skip');
 }
@@ -28,6 +37,65 @@ foreach ($bulk as $l) {
 }
 
 var_dump(count($bulk));
-var_dump($bulk[42]->getConsumer());
+var_dump($bulk[29]->getConsumer());
 ?>
 --EXPECT--
+int(54)
+string(9) "GPIO\Line"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+string(7) "unnamed"
+int(54)
+string(4) "led0"

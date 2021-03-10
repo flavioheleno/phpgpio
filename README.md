@@ -60,6 +60,19 @@ SoC                         | Model
 [BCM2837B0](tests/017.phpt) | [Raspberry Pi 3B+ and 3A+](https://www.raspberrypi.org/documentation/hardware/raspberrypi/bcm2837b0/README.md)
 [BCM2711](tests/018.phpt)   | [Raspberry Pi 4B](https://www.raspberrypi.org/documentation/hardware/raspberrypi/bcm2711/README.md)
 
+## Alternatives
+
+- [PiPHP/GPIO](https://github.com/PiPHP/GPIO)
+- [ronanguilloux/php-gpio](https://github.com/ronanguilloux/php-gpio)
+- [Volantus/php-pigpio](https://github.com/Volantus/php-pigpio)
+
+## Other Languages
+
+- Golang: [periph/conn](https://github.com/periph/conn)
+- Golang: [warthog618/gpiod](https://github.com/warthog618/gpiod)
+- Java: [mattjlewis/diozero](https://github.com/mattjlewis/diozero)
+- NodeJS: [sombriks/node-libgpiod](https://github.com/sombriks/node-libgpiod)
+
 ## License
 
 This library is licensed under the [PHP License](LICENSE).

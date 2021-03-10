@@ -31,8 +31,6 @@
 
   /* handle chipObject creation */
   extern zend_object *chipCreateObject(zend_class_entry *zceClass);
-  /* sets the internal chipObject data */
-  extern void chipSetData(zend_object *obj, struct gpiod_chip *chip);
 
   END_EXTERN_C()
 

@@ -6,6 +6,15 @@ if (! extension_loaded('phpgpio')) {
   exit('skip');
 }
 
+if (is_file('/sys/firmware/devicetree/base/model') === false) {
+  exit('skip');
+}
+
+$model = file_get_contents('/sys/firmware/devicetree/base/model');
+if (preg_match('/^Raspberry Pi 4/', $model) !== 1) {
+  exit('skip');
+}
+
 if (GPIO\Chip::isDevice('/dev/gpiochip0') === false) {
   exit('skip');
 }

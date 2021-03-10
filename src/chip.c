@@ -129,11 +129,6 @@ zend_object *chipCreateObject(zend_class_entry *zceClass) {
   return &chipInstance->zendObject;
 }
 
-void chipSetData(zend_object *obj, struct gpiod_chip *chip) {
-  chipObject *chipInstance = getChipObject(obj);
-  chipInstance->chip = chip;
-}
-
 /********************************/
 /* PHP Visible Methods          */
 /********************************/
