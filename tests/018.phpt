@@ -38,6 +38,11 @@ foreach ($bulk as $l) {
 
 var_dump(count($bulk));
 var_dump($bulk[42]->getConsumer());
+
+$bulk = $chip->getLines([1, 14, 52, 7, 2, 0]);
+foreach ($bulk as $line) {
+  var_dump($line->getOffset());
+}
 ?>
 --EXPECT--
 int(58)
@@ -103,3 +108,9 @@ string(10) "RGMII_TXD2"
 string(10) "RGMII_TXD3"
 int(58)
 string(4) "led0"
+int(1)
+int(14)
+int(52)
+int(7)
+int(2)
+int(0)

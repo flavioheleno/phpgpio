@@ -23,7 +23,7 @@ final class Bulk implements \Countable, \ArrayAccess, \Iterator {
   /**
    * Count elements of an object
    *
-   * @return void
+   * @return int
    */
   public function count(): int {}
 

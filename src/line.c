@@ -265,23 +265,104 @@ PHP_METHOD(GPIO_Line, getOffset) {
 }
 /* }}} */
 
-/* {{{ GPIO\Line::request(LineRequest $lineRequest, int $default = 0): void */
+/* {{{ GPIO\Line::request(string $consumer, int $type, int $flags, int $default = 0): void */
 PHP_METHOD(GPIO_Line, request) {
+  char *consumer;
+  size_t consumerLen;
+  zend_long type;
+  zend_long flags;
+  zend_long value = 0;
+  ZEND_PARSE_PARAMETERS_START(3, 4)
+    Z_PARAM_STRING(consumer, consumerLen)
+    Z_PARAM_LONG(type)
+    Z_PARAM_LONG(flags)
+    Z_PARAM_OPTIONAL
+    Z_PARAM_LONG(value)
+  ZEND_PARSE_PARAMETERS_END();
+
+  struct gpiod_line_request_config config;
+  config.consumer = consumer;
+  config.request_type = (int)type;
+  config.flags = (int)flags;
+
+  lineObject *lineInstance = getLineObject(Z_OBJ_P(ZEND_THIS));
+  int result = gpiod_line_request(lineInstance->line, &config, (int)value);
+  if (result == -1) {
+    zend_throw_error(zceException, "Failed to request line");
+
+    RETURN_THROWS();
+  }
 }
 /* }}} */
 
 /* {{{ GPIO\Line::setConfig(int $direction, int $flags, int $value = 0): void */
 PHP_METHOD(GPIO_Line, setConfig) {
+  zend_long direction;
+  zend_long flags;
+  zend_long value = 0;
+  ZEND_PARSE_PARAMETERS_START(2, 3)
+    Z_PARAM_LONG(direction)
+    Z_PARAM_LONG(flags)
+    Z_PARAM_OPTIONAL
+    Z_PARAM_LONG(value)
+  ZEND_PARSE_PARAMETERS_END();
+
+  lineObject *lineInstance = getLineObject(Z_OBJ_P(ZEND_THIS));
+  int result = gpiod_line_set_config(lineInstance->line, (int)direction, (int)flags, (int)value);
+  if (result == -1) {
+    zend_throw_error(zceException, "Failed to set line configuration");
+
+    RETURN_THROWS();
+  }
+}
+/* }}} */
+
+/* {{{ GPIO\Line::setDirectionInput(): void */
+PHP_METHOD(GPIO_Line, setDirectionInput) {
+  ZEND_PARSE_PARAMETERS_NONE();
+
+  lineObject *lineInstance = getLineObject(Z_OBJ_P(ZEND_THIS));
+  int result = gpiod_line_set_direction_input(lineInstance->line);
+  if (result == -1) {
+    zend_throw_error(zceException, "Failed to set line direction");
+
+    RETURN_THROWS();
+  }
 }
 /* }}} */
 
 /* {{{ GPIO\Line::setDirectionOutput(int $value = 0): void */
 PHP_METHOD(GPIO_Line, setDirectionOutput) {
+  zend_long value = 0;
+  ZEND_PARSE_PARAMETERS_START(0, 1)
+    Z_PARAM_OPTIONAL
+    Z_PARAM_LONG(value)
+  ZEND_PARSE_PARAMETERS_END();
+
+  lineObject *lineInstance = getLineObject(Z_OBJ_P(ZEND_THIS));
+  int result = gpiod_line_set_direction_output(lineInstance->line, (int)value);
+  if (result == -1) {
+    zend_throw_error(zceException, "Failed to set line configuration");
+
+    RETURN_THROWS();
+  }
 }
 /* }}} */
 
 /* {{{ GPIO\Line::setFlags(int $flags): void */
 PHP_METHOD(GPIO_Line, setFlags) {
+  zend_long flags;
+  ZEND_PARSE_PARAMETERS_START(1, 1)
+    Z_PARAM_LONG(flags)
+  ZEND_PARSE_PARAMETERS_END();
+
+  lineObject *lineInstance = getLineObject(Z_OBJ_P(ZEND_THIS));
+  int result = gpiod_line_set_flags(lineInstance->line, (int)flags);
+  if (result == -1) {
+    zend_throw_error(zceException, "Failed to set line flags");
+
+    RETURN_THROWS();
+  }
 }
 /* }}} */
 
@@ -293,6 +374,11 @@ PHP_METHOD(GPIO_Line, setValue) {
   ZEND_PARSE_PARAMETERS_END();
 
   lineObject *lineInstance = getLineObject(Z_OBJ_P(ZEND_THIS));
-  gpiod_line_set_value(lineInstance->line, value);
+  int result = gpiod_line_set_value(lineInstance->line, (int)value);
+  if (result == -1) {
+    zend_throw_error(zceException, "Failed to set line value");
+
+    RETURN_THROWS();
+  }
 }
 /* }}} */

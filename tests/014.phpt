@@ -48,6 +48,11 @@ if (preg_match('/^Raspberry Pi Zero/', $model) !== 1) {
   // RPi Zero
   var_dump($bulk[47]->getConsumer());
 }
+
+$bulk = $chip->getLines([1, 14, 52, 7, 2, 0]);
+foreach ($bulk as $line) {
+  var_dump($line->getOffset());
+}
 ?>
 --EXPECT--
 int(54)
@@ -109,3 +114,9 @@ string(7) "unnamed"
 string(7) "unnamed"
 int(54)
 string(4) "led0"
+int(1)
+int(14)
+int(52)
+int(7)
+int(2)
+int(0)

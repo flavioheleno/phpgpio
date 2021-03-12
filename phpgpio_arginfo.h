@@ -1,5 +1,5 @@
 /* This is a generated file, edit the .stub.php file instead.
- * Stub hash: 8a4c570217fe0e55efebf82b5d01bff8b3ecae2b */
+ * Stub hash: f63ea2d3774a6778210081c8261c1ce3a8df7985 */
 
 ZEND_BEGIN_ARG_WITH_RETURN_OBJ_INFO_EX(arginfo_class_GPIO_Bulk_getChip, 0, 0, GPIO\\Chip, 0)
 ZEND_END_ARG_INFO()
@@ -93,9 +93,11 @@ ZEND_END_ARG_INFO()
 
 #define arginfo_class_GPIO_Line_getOffset arginfo_class_GPIO_Bulk_count
 
-ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_GPIO_Line_request, 0, 1, IS_VOID, 0)
-	ZEND_ARG_OBJ_INFO(0, lineRequest, GPIO\\LineRequest, 0)
-	ZEND_ARG_TYPE_INFO_WITH_DEFAULT_VALUE(0, default, IS_LONG, 0, "0")
+ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_GPIO_Line_request, 0, 3, IS_VOID, 0)
+	ZEND_ARG_TYPE_INFO(0, consumer, IS_STRING, 0)
+	ZEND_ARG_TYPE_INFO(0, type, IS_LONG, 0)
+	ZEND_ARG_TYPE_INFO(0, flags, IS_LONG, 0)
+	ZEND_ARG_TYPE_INFO_WITH_DEFAULT_VALUE(0, value, IS_LONG, 0, "0")
 ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_GPIO_Line_setConfig, 0, 2, IS_VOID, 0)
@@ -103,6 +105,8 @@ ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_GPIO_Line_setConfig, 0, 2,
 	ZEND_ARG_TYPE_INFO(0, flags, IS_LONG, 0)
 	ZEND_ARG_TYPE_INFO_WITH_DEFAULT_VALUE(0, value, IS_LONG, 0, "0")
 ZEND_END_ARG_INFO()
+
+#define arginfo_class_GPIO_Line_setDirectionInput arginfo_class_GPIO_Bulk_next
 
 ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_GPIO_Line_setDirectionOutput, 0, 0, IS_VOID, 0)
 	ZEND_ARG_TYPE_INFO_WITH_DEFAULT_VALUE(0, value, IS_LONG, 0, "0")
@@ -152,6 +156,7 @@ ZEND_METHOD(GPIO_Line, getName);
 ZEND_METHOD(GPIO_Line, getOffset);
 ZEND_METHOD(GPIO_Line, request);
 ZEND_METHOD(GPIO_Line, setConfig);
+ZEND_METHOD(GPIO_Line, setDirectionInput);
 ZEND_METHOD(GPIO_Line, setDirectionOutput);
 ZEND_METHOD(GPIO_Line, setFlags);
 ZEND_METHOD(GPIO_Line, setValue);
@@ -208,6 +213,7 @@ static const zend_function_entry class_GPIO_Line_methods[] = {
 	ZEND_ME(GPIO_Line, getOffset, arginfo_class_GPIO_Line_getOffset, ZEND_ACC_PUBLIC)
 	ZEND_ME(GPIO_Line, request, arginfo_class_GPIO_Line_request, ZEND_ACC_PUBLIC)
 	ZEND_ME(GPIO_Line, setConfig, arginfo_class_GPIO_Line_setConfig, ZEND_ACC_PUBLIC)
+	ZEND_ME(GPIO_Line, setDirectionInput, arginfo_class_GPIO_Line_setDirectionInput, ZEND_ACC_PUBLIC)
 	ZEND_ME(GPIO_Line, setDirectionOutput, arginfo_class_GPIO_Line_setDirectionOutput, ZEND_ACC_PUBLIC)
 	ZEND_ME(GPIO_Line, setFlags, arginfo_class_GPIO_Line_setFlags, ZEND_ACC_PUBLIC)
 	ZEND_ME(GPIO_Line, setValue, arginfo_class_GPIO_Line_setValue, ZEND_ACC_PUBLIC)

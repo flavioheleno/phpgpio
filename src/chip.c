@@ -284,6 +284,38 @@ PHP_METHOD(GPIO_Chip, getLine) {
 
 /* {{{ GPIO\Chip::getLines(array $offsets): GPIO\Bulk */
 PHP_METHOD(GPIO_Chip, getLines) {
+  HashTable *offsetsHashTable;
+  zval *entry;
+  ZEND_PARSE_PARAMETERS_START(1, 1)
+    Z_PARAM_ARRAY_HT(offsetsHashTable)
+  ZEND_PARSE_PARAMETERS_END();
+
+  unsigned int numOffsets = zend_hash_num_elements(offsetsHashTable);
+
+  unsigned int *offsets;
+  offsets = emalloc(numOffsets);
+  int i = 0;
+  ZEND_HASH_FOREACH_VAL(offsetsHashTable, entry) {
+    offsets[i++] = zval_get_long(entry);
+  } ZEND_HASH_FOREACH_END();
+
+  chipObject *chipInstance = getChipObject(Z_OBJ_P(ZEND_THIS));
+  struct gpiod_line_bulk *bulk = gpiod_chip_get_lines(chipInstance->chip, offsets, numOffsets);
+  efree(offsets);
+  if (bulk == NULL) {
+    zend_throw_error(zceException, "Failed to get bulk");
+
+    RETURN_THROWS();
+  }
+
+  /* create a new GPIO\Bulk instance */
+  zend_object *obj = bulkCreateObject(zceBulk);
+  bulkSetData(obj, bulk);
+
+  /* update GPIO\Bulk instance property with reference to $this */
+  zend_update_property(zceBulk, obj, "chip", sizeof("chip") - 1, ZEND_THIS);
+
+  RETURN_OBJ(obj);
 }
 /* }}} */
 

@@ -25,7 +25,7 @@ final class Bulk implements \Countable, \ArrayAccess, \Iterator {
   /**
    * Count elements of an object
    *
-   * @return void
+   * @return int
    */
   public function count(): int {}
 
@@ -354,10 +354,12 @@ final class Line {
   /**
    * Request this line.
    *
-   * @param \GPIO\LineRequest $config  Request config (see gpiod::line_request).
-   * @param int               $default Default value (only matters for OUTPUT direction).
+   * @param string $consumer Name of the consumer.
+   * @param int    $type     Request type.
+   * @param int    $flags    Configuration flags.
+   * @param int    $default  Default value (only matters for OUTPUT direction).
    */
-  public function request(LineRequest $lineRequest, int $default = 0): void {}
+  public function request(string $consumer, int $type, int $flags, int $default = 0): void {}
 
   /**
    * Set configuration of this line.
@@ -369,7 +371,12 @@ final class Line {
   public function setConfig(int $direction, int $flags, int $value = 0): void {}
 
   /**
-   * Change the direction this lines to output.
+   * Change the direction of this line to input.
+   */
+  public function setDirectionInput(): void {}
+
+  /**
+   * Change the direction of this line to output.
    *
    * @param int $value New value (0 or 1).
    */

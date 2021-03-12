@@ -38,6 +38,11 @@ foreach ($bulk as $l) {
 
 var_dump(count($bulk));
 var_dump($bulk[42]->getConsumer());
+
+$bulk = $chip->getLines([1, 14, 52, 7, 2, 0]);
+foreach ($bulk as $line) {
+  var_dump($line->getOffset());
+}
 ?>
 --EXPECT--
 
