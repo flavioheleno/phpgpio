@@ -1,5 +1,5 @@
 --TEST--
-Test extension on BCM2835 (Raspberry Pi 1 and Zero)
+BCM2837 Test (Raspberry Pi 3 (and later Raspberry Pi 2))
 --SKIPIF--
 <?php
 if (! extension_loaded('phpgpio')) {
@@ -11,7 +11,7 @@ if (is_file('/sys/firmware/devicetree/base/model') === false) {
 }
 
 $model = file_get_contents('/sys/firmware/devicetree/base/model');
-if (preg_match('/^Raspberry Pi (Model|Zero)/', $model) !== 1) {
+if (preg_match('/^Raspberry Pi [23]/', $model) !== 1) {
   exit('skip');
 }
 
@@ -20,7 +20,7 @@ if (GPIO\Chip::isDevice('/dev/gpiochip0') === false) {
 }
 
 $chip = new GPIO\Chip('/dev/gpiochip0');
-if ($chip->getLabel() !== 'pinctrl-bcm2835') {
+if ($chip->getLabel() !== 'pinctrl-bcm2837') {
   exit('skip');
 }
 ?>
@@ -37,17 +37,7 @@ foreach ($bulk as $l) {
 }
 
 var_dump(count($bulk));
-
-$model = file_get_contents('/sys/firmware/devicetree/base/model');
-if (preg_match('/^Raspberry Pi Model [AB]/', $model) !== 1) {
-  // RPi 1
-  var_dump($bulk[16]->getConsumer());
-}
-
-if (preg_match('/^Raspberry Pi Zero/', $model) !== 1) {
-  // RPi Zero
-  var_dump($bulk[47]->getConsumer());
-}
+var_dump($bulk[29]->getConsumer());
 
 $bulk = $chip->getLines([1, 14, 52, 7, 2, 0]);
 foreach ($bulk as $line) {

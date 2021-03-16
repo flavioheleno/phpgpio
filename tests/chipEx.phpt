@@ -1,5 +1,5 @@
 --TEST--
-Extended GPIO\Bulk Test
+GPIO\Chip Extended Class Test
 --SKIPIF--
 <?php
 if (! extension_loaded('phpgpio')) {
@@ -13,33 +13,32 @@ if (! GPIO\Chip::isDevice('/dev/gpiochip0')) {
 --FILE--
 <?php
 $chip = new GPIO\Chip('/dev/gpiochip0');
-$bulk = $chip->getAllLines();
 try {
-  $bulk->foo = 1;
-} catch (Error $exception) {
+  $chip->foo = 1;
+} catch (\Error $exception) {
   echo $exception->getMessage(), PHP_EOL;
 }
 
 try {
-  $bulk[0] = 1;
-} catch (Error $exception) {
+  $chip[0] = 1;
+} catch (\Error $exception) {
   echo $exception->getMessage(), PHP_EOL;
 }
 
 try {
-  unset($bulk->foo);
-} catch (Error $exception) {
+  unset($chip->foo);
+} catch (\Error $exception) {
   echo $exception->getMessage(), PHP_EOL;
 }
 
 try {
-  unset($bulk[0]);
-} catch (Error $exception) {
+  unset($chip[0]);
+} catch (\Error $exception) {
   echo $exception->getMessage(), PHP_EOL;
 }
 ?>
 --EXPECT--
-Cannot create dynamic property GPIO\Bulk::$foo
-Cannot set GPIO\Bulk line
-Cannot unset GPIO\Bulk property
-Cannot unset GPIO\Bulk line
+Cannot create dynamic property GPIO\Chip::$foo
+Cannot use object of type GPIO\Chip as array
+Cannot unset GPIO\Chip::$foo property
+Cannot use object of type GPIO\Chip as array

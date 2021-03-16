@@ -1,5 +1,5 @@
 --TEST--
-Test GPIO\Bulk class
+GPIO\Bulk General Class Test
 --SKIPIF--
 <?php
 if (! extension_loaded('phpgpio')) {

@@ -1,5 +1,5 @@
 --TEST--
-Test GPIO\Chip class
+GPIO\Line General Class Test
 --SKIPIF--
 <?php
 if (! extension_loaded('phpgpio')) {
@@ -8,7 +8,5 @@ if (! extension_loaded('phpgpio')) {
 ?>
 --FILE--
 <?php
-var_dump(GPIO\Chip::isDevice('/dev/null'));
 ?>
 --EXPECT--
-bool(false)

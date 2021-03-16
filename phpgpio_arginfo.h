@@ -1,5 +1,5 @@
 /* This is a generated file, edit the .stub.php file instead.
- * Stub hash: f63ea2d3774a6778210081c8261c1ce3a8df7985 */
+ * Stub hash: 6020ef6d6f3aa66c7928b5037d969b6fcf1294af */
 
 ZEND_BEGIN_ARG_WITH_RETURN_OBJ_INFO_EX(arginfo_class_GPIO_Bulk_getChip, 0, 0, GPIO\\Chip, 0)
 ZEND_END_ARG_INFO()
@@ -97,19 +97,19 @@ ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_GPIO_Line_request, 0, 3, I
 	ZEND_ARG_TYPE_INFO(0, consumer, IS_STRING, 0)
 	ZEND_ARG_TYPE_INFO(0, type, IS_LONG, 0)
 	ZEND_ARG_TYPE_INFO(0, flags, IS_LONG, 0)
-	ZEND_ARG_TYPE_INFO_WITH_DEFAULT_VALUE(0, value, IS_LONG, 0, "0")
+	ZEND_ARG_TYPE_INFO_WITH_DEFAULT_VALUE(0, value, IS_LONG, 0, "self::VALUE_LOW")
 ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_GPIO_Line_setConfig, 0, 2, IS_VOID, 0)
 	ZEND_ARG_TYPE_INFO(0, direction, IS_LONG, 0)
 	ZEND_ARG_TYPE_INFO(0, flags, IS_LONG, 0)
-	ZEND_ARG_TYPE_INFO_WITH_DEFAULT_VALUE(0, value, IS_LONG, 0, "0")
+	ZEND_ARG_TYPE_INFO_WITH_DEFAULT_VALUE(0, value, IS_LONG, 0, "self::VALUE_LOW")
 ZEND_END_ARG_INFO()
 
 #define arginfo_class_GPIO_Line_setDirectionInput arginfo_class_GPIO_Bulk_next
 
 ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_GPIO_Line_setDirectionOutput, 0, 0, IS_VOID, 0)
-	ZEND_ARG_TYPE_INFO_WITH_DEFAULT_VALUE(0, value, IS_LONG, 0, "0")
+	ZEND_ARG_TYPE_INFO_WITH_DEFAULT_VALUE(0, value, IS_LONG, 0, "self::VALUE_LOW")
 ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_GPIO_Line_setFlags, 0, 1, IS_VOID, 0)

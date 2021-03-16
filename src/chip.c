@@ -23,6 +23,7 @@
 #include "bulk.h"
 #include "phpgpio.h"
 #include "phpgpio_arginfo.h"
+#include "zend_exceptions.h"
 #include "zend_interfaces.h"
 #include "zend_object_handlers.h"
 
@@ -64,7 +65,7 @@ static void chipFreeObject(zend_object *obj) {
 
 /* custom unset($inst->prop) handler */
 static void unsetPropertyObjectHandler(zend_object *object, zend_string *offset, void **cache_slot) {
-  zend_throw_error(NULL, "Cannot unset GPIO\\Chip property");
+  zend_throw_error(NULL, "Cannot unset GPIO\\Chip::$%s property", ZSTR_VAL(offset));
 }
 
 /********************************/
@@ -153,10 +154,11 @@ PHP_METHOD(GPIO_Chip, __construct) {
     Z_PARAM_STRING(path, pathLen)
   ZEND_PARSE_PARAMETERS_END();
 
+  errno = 0;
   chipObject *chipInstance = getChipObject(Z_OBJ_P(ZEND_THIS));
   chipInstance->chip = gpiod_chip_open(path);
   if (chipInstance->chip == NULL) {
-    zend_throw_error(zceException, "Failed to open chip");
+    zend_throw_exception_ex(zceException, errno, "Failed to open chip: %s", strerror(errno));
 
     RETURN_THROWS();
   }
@@ -174,10 +176,11 @@ PHP_METHOD(GPIO_Chip, findLineUnique) {
     Z_PARAM_STRING(name, nameLen)
   ZEND_PARSE_PARAMETERS_END();
 
+  errno = 0;
   chipObject *chipInstance = getChipObject(Z_OBJ_P(ZEND_THIS));
   struct gpiod_line *line = gpiod_chip_find_line_unique(chipInstance->chip, name);
   if (line == NULL) {
-    zend_throw_error(zceException, "Line not found");
+    zend_throw_exception_ex(zceException, errno, "Line not found: %s", strerror(errno));
 
     RETURN_THROWS();
   }
@@ -201,10 +204,11 @@ PHP_METHOD(GPIO_Chip, findAllLines) {
     Z_PARAM_STRING(name, nameLen)
   ZEND_PARSE_PARAMETERS_END();
 
+  errno = 0;
   chipObject *chipInstance = getChipObject(Z_OBJ_P(ZEND_THIS));
   struct gpiod_line_bulk *bulk = gpiod_chip_find_line(chipInstance->chip, name);
   if (bulk == NULL) {
-    zend_throw_error(zceException, "Failed to find lines");
+    zend_throw_exception_ex(zceException, errno, "Failed to find lines: %s", strerror(errno));
 
     RETURN_THROWS();
   }
@@ -224,10 +228,11 @@ PHP_METHOD(GPIO_Chip, findAllLines) {
 PHP_METHOD(GPIO_Chip, getAllLines) {
   ZEND_PARSE_PARAMETERS_NONE();
 
+  errno = 0;
   chipObject *chipInstance = getChipObject(Z_OBJ_P(ZEND_THIS));
   struct gpiod_line_bulk *bulk = gpiod_chip_get_all_lines(chipInstance->chip);
   if (bulk == NULL) {
-    zend_throw_error(zceException, "Failed to get bulk");
+    zend_throw_exception_ex(zceException, errno, "Failed to get bulk: %s", strerror(errno));
 
     RETURN_THROWS();
   }
@@ -253,20 +258,21 @@ PHP_METHOD(GPIO_Chip, getLine) {
   chipObject *chipInstance = getChipObject(Z_OBJ_P(ZEND_THIS));
 
   if (offset < 0) {
-    zend_throw_error(zceException, "Invalid offset, cannot be negative");
+    zend_throw_exception_ex(zceException, 0, "Invalid offset, cannot be negative");
 
     RETURN_THROWS();
   }
 
   if (offset >= gpiod_chip_num_lines(chipInstance->chip)) {
-    zend_throw_error(zceException, "Invalid offset, cannot be greater than the number of lines");
+    zend_throw_exception_ex(zceException, 0, "Invalid offset, cannot be greater than the number of lines");
 
     RETURN_THROWS();
   }
 
+  errno = 0;
   struct gpiod_line *line = gpiod_chip_get_line(chipInstance->chip, offset);
   if (line == NULL) {
-    zend_throw_error(zceException, "Failed to get line offset");
+    zend_throw_exception_ex(zceException, errno, "Failed to get line offset: %s", strerror(errno));
 
     RETURN_THROWS();
   }
@@ -299,11 +305,12 @@ PHP_METHOD(GPIO_Chip, getLines) {
     offsets[i++] = zval_get_long(entry);
   } ZEND_HASH_FOREACH_END();
 
+  errno = 0;
   chipObject *chipInstance = getChipObject(Z_OBJ_P(ZEND_THIS));
   struct gpiod_line_bulk *bulk = gpiod_chip_get_lines(chipInstance->chip, offsets, numOffsets);
   efree(offsets);
   if (bulk == NULL) {
-    zend_throw_error(zceException, "Failed to get bulk");
+    zend_throw_exception_ex(zceException, errno, "Failed to get bulk: %s", strerror(errno));
 
     RETURN_THROWS();
   }

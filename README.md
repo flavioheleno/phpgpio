@@ -38,7 +38,7 @@ Class                                 | Description
 --------------------------------------|------------
 [GPIO\Bulk](stubs/Bulk.php)           | Represents multiple GPIO lines.
 [GPIO\Chip](stubs/Chip.php)           | Represents a GPIO chip.
-[GPIO\Exception](stubs/Exception.php) | Base exception.
+[GPIO\Exception](stubs/Exception.php) | GPIO base exception.
 [GPIO\Line](stub/Line.php)            | Represents a single GPIO line.
 
 ## Tools
@@ -52,13 +52,13 @@ Name                                   | Description
 
 The table below lists the supported and tested chips.
 
-SoC                         | Model
-----------------------------|------
-[BCM2835](tests/014.phpt)   | [Raspberry Pi 1 and Zero](https://www.raspberrypi.org/documentation/hardware/raspberrypi/bcm2835/README.md)
-[BCM2836](tests/015.phpt)   | [Raspberry Pi 2](https://www.raspberrypi.org/documentation/hardware/raspberrypi/bcm2836/README.md)
-[BCM2837](tests/016.phpt)   | [Raspberry Pi 3 (and later Raspberry Pi 2)](https://www.raspberrypi.org/documentation/hardware/raspberrypi/bcm2837/README.md)
-[BCM2837B0](tests/017.phpt) | [Raspberry Pi 3B+ and 3A+](https://www.raspberrypi.org/documentation/hardware/raspberrypi/bcm2837b0/README.md)
-[BCM2711](tests/018.phpt)   | [Raspberry Pi 4B](https://www.raspberrypi.org/documentation/hardware/raspberrypi/bcm2711/README.md)
+SoC                               | Model
+----------------------------------|------
+[BCM2835](tests/BCM2835.phpt)     | [Raspberry Pi 1 and Zero](https://www.raspberrypi.org/documentation/hardware/raspberrypi/bcm2835/README.md)
+[BCM2836](tests/BCM2836.phpt)     | [Raspberry Pi 2](https://www.raspberrypi.org/documentation/hardware/raspberrypi/bcm2836/README.md)
+[BCM2837](tests/BCM2837.phpt)     | [Raspberry Pi 3 (and later Raspberry Pi 2)](https://www.raspberrypi.org/documentation/hardware/raspberrypi/bcm2837/README.md)
+[BCM2837B0](tests/BCM2837B0.phpt) | [Raspberry Pi 3B+ and 3A+](https://www.raspberrypi.org/documentation/hardware/raspberrypi/bcm2837b0/README.md)
+[BCM2711](tests/BCM2711.phpt)     | [Raspberry Pi 4B](https://www.raspberrypi.org/documentation/hardware/raspberrypi/bcm2711/README.md)
 
 ## Alternatives
 

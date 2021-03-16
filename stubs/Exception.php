@@ -5,4 +5,4 @@ namespace GPIO;
 /**
  * Base exception
  */
-class Exception extends \Error {}
+class Exception extends \Exception {}

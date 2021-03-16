@@ -1,5 +1,5 @@
 --TEST--
-Test extension on BCM2711 (Raspberry Pi 4B)
+BCM2711 Test (Raspberry Pi 4B)
 --SKIPIF--
 <?php
 if (! extension_loaded('phpgpio')) {

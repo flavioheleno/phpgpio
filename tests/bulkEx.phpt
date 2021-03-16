@@ -1,5 +1,5 @@
 --TEST--
-Extended GPIO\Line Test
+GPIO\Bulk Extended Class Test
 --SKIPIF--
 <?php
 if (! extension_loaded('phpgpio')) {
@@ -13,33 +13,33 @@ if (! GPIO\Chip::isDevice('/dev/gpiochip0')) {
 --FILE--
 <?php
 $chip = new GPIO\Chip('/dev/gpiochip0');
-$line = $chip->getLine(0);
+$bulk = $chip->getAllLines();
 try {
-  $line->foo = 1;
-} catch (Error $exception) {
+  $bulk->foo = 1;
+} catch (\Error $exception) {
   echo $exception->getMessage(), PHP_EOL;
 }
 
 try {
-  $line[0] = 1;
-} catch (Error $exception) {
+  $bulk[0] = 1;
+} catch (\Error $exception) {
   echo $exception->getMessage(), PHP_EOL;
 }
 
 try {
-  unset($line->foo);
-} catch (Error $exception) {
+  unset($bulk->foo);
+} catch (\Error $exception) {
   echo $exception->getMessage(), PHP_EOL;
 }
 
 try {
-  unset($line[0]);
-} catch (Error $exception) {
+  unset($bulk[0]);
+} catch (\Error $exception) {
   echo $exception->getMessage(), PHP_EOL;
 }
 ?>
 --EXPECT--
-Cannot create dynamic property GPIO\Line::$foo
-Cannot use object of type GPIO\Line as array
-Cannot unset GPIO\Line property
-Cannot use object of type GPIO\Line as array
+Cannot create dynamic property GPIO\Bulk::$foo
+Cannot set GPIO\Bulk line at offset 0
+Cannot unset GPIO\Bulk::$foo property
+Cannot unset GPIO\Bulk line at offset 0

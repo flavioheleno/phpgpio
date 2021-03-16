@@ -1,5 +1,5 @@
 --TEST--
-Test GPIO\Bulk constructor restriction
+GPIO\Bulk Constructor Restriction Test
 --SKIPIF--
 <?php
 if (! extension_loaded('phpgpio')) {

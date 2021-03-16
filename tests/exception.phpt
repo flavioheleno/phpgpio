@@ -1,5 +1,5 @@
 --TEST--
-Test GPIO\Exception class
+GPIO\Exception General Class Test
 --SKIPIF--
 <?php
 if (! extension_loaded('phpgpio')) {
@@ -8,7 +8,7 @@ if (! extension_loaded('phpgpio')) {
 ?>
 --FILE--
 <?php
-var_dump(is_subclass_of(GPIO\Exception::class, \Error::class));
+var_dump(is_subclass_of(GPIO\Exception::class, \Exception::class));
 ?>
 --EXPECT--
 bool(true)

@@ -14,6 +14,15 @@ final class Line {
   private Chip $chip;
 
   /**
+   * @var int
+   */
+  public const VALUE_HIGH = 1;
+  /**
+   * @var int
+   */
+  public const VALUE_LOW = 0;
+
+  /**
    * Get current bias of this line.
    *
    * @return int
@@ -98,7 +107,7 @@ final class Line {
    * @param int    $flags    Configuration flags.
    * @param int    $value    Default value (only matters for OUTPUT direction).
    */
-  public function request(string $consumer, int $type, int $flags, int $value = 0): void {}
+  public function request(string $consumer, int $type, int $flags, int $value = self::VALUE_LOW): void {}
 
   /**
    * Set configuration of this line.
@@ -107,7 +116,7 @@ final class Line {
    * @param int $flags     Replacement flags.
    * @param int $value     New value (0 or 1) - only matters for OUTPUT direction.
    */
-  public function setConfig(int $direction, int $flags, int $value = 0): void {}
+  public function setConfig(int $direction, int $flags, int $value = self::VALUE_LOW): void {}
 
   /**
    * Change the direction of this line to input.
@@ -119,7 +128,7 @@ final class Line {
    *
    * @param int $value New value (0 or 1).
    */
-  public function setDirectionOutput(int $value = 0): void {}
+  public function setDirectionOutput(int $value = self::VALUE_LOW): void {}
 
   /**
    * Set configuration flags of this line.

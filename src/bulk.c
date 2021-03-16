@@ -22,6 +22,7 @@
 #include "line.h"
 #include "phpgpio.h"
 #include "phpgpio_arginfo.h"
+#include "zend_exceptions.h"
 #include "zend_interfaces.h"
 #include "zend_object_handlers.h"
 
@@ -72,7 +73,7 @@ static zend_function *getConstructorObjectHandler(zend_object *obj) {
 
 /* custom unset($inst->prop) handler */
 static void unsetPropertyObjectHandler(zend_object *object, zend_string *offset, void **cache_slot) {
-  zend_throw_error(NULL, "Cannot unset GPIO\\Bulk property");
+  zend_throw_error(NULL, "Cannot unset GPIO\\Bulk::$%s property", ZSTR_VAL(offset));
 }
 
 /********************************/
@@ -196,20 +197,21 @@ PHP_METHOD(GPIO_Bulk, offsetGet) {
   bulkObject *bulkInstance = getBulkObject(Z_OBJ_P(ZEND_THIS));
 
   if (offset < 0) {
-    zend_throw_error(zceException, "Invalid offset, cannot be negative");
+    zend_throw_exception_ex(zceException, 0, "Invalid offset, cannot be negative");
 
     RETURN_THROWS();
   }
 
   if (offset >= gpiod_line_bulk_num_lines(bulkInstance->bulk)) {
-    zend_throw_error(zceException, "Invalid offset, cannot be greater than the number of lines");
+    zend_throw_exception_ex(zceException, 0, "Invalid offset, cannot be greater than the number of lines");
 
     RETURN_THROWS();
   }
 
+  errno = 0;
   struct gpiod_line *line = gpiod_line_bulk_get_line(bulkInstance->bulk, offset);
   if (line == NULL) {
-    zend_throw_error(zceException, "Failed to get line offset");
+    zend_throw_exception_ex(zceException, errno, "Failed to get line at offset %d: %s", offset, strerror(errno));
 
     RETURN_THROWS();
   }
@@ -235,7 +237,7 @@ PHP_METHOD(GPIO_Bulk, offsetSet) {
     Z_PARAM_LONG(value)
   ZEND_PARSE_PARAMETERS_END();
 
-  zend_throw_error(zceException, "Cannot set GPIO\\Bulk line");
+  zend_throw_error(NULL, "Cannot set GPIO\\Bulk line at offset %d", offset);
 
   RETURN_THROWS();
 }
@@ -248,7 +250,7 @@ PHP_METHOD(GPIO_Bulk, offsetUnset) {
     Z_PARAM_LONG(offset)
   ZEND_PARSE_PARAMETERS_END();
 
-  zend_throw_error(zceException, "Cannot unset GPIO\\Bulk line");
+  zend_throw_error(NULL, "Cannot unset GPIO\\Bulk line at offset %d", offset);
 
   RETURN_THROWS();
 }
@@ -258,10 +260,11 @@ PHP_METHOD(GPIO_Bulk, offsetUnset) {
 PHP_METHOD(GPIO_Bulk, current) {
   ZEND_PARSE_PARAMETERS_NONE();
 
+  errno = 0;
   bulkObject *bulkInstance = getBulkObject(Z_OBJ_P(ZEND_THIS));
   struct gpiod_line *line = gpiod_line_bulk_get_line(bulkInstance->bulk, bulkInstance->curr);
   if (line == NULL) {
-    zend_throw_error(zceException, "Failed to get line");
+    zend_throw_exception_ex(zceException, errno, "Failed to get current line: %s", strerror(errno));
 
     RETURN_THROWS();
   }

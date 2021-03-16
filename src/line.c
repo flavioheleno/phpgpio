@@ -22,8 +22,15 @@
 #include "chip.h"
 #include "phpgpio.h"
 #include "phpgpio_arginfo.h"
+#include "zend_exceptions.h"
 #include "zend_interfaces.h"
 #include "zend_object_handlers.h"
+
+#include <errno.h>
+
+/* Class constant values as defines so it can be used in the code as well */
+#define VALUE_LOW 0
+#define VALUE_HIGH 1
 
 /* zend_object wrapper to ensure gpiod_line is handled properly */
 struct _lineObject {
@@ -70,7 +77,7 @@ static zend_function *getConstructorObjectHandler(zend_object *obj) {
 
 /* custom unset($inst->prop) handler */
 static void unsetPropertyObjectHandler(zend_object *object, zend_string *offset, void **cache_slot) {
-  zend_throw_error(NULL, "Cannot unset GPIO\\Line property");
+  zend_throw_error(NULL, "Cannot unset GPIO\\Line::$%s property", ZSTR_VAL(offset));
 }
 
 /********************************/
@@ -90,6 +97,10 @@ zend_class_entry* registerLineClass() {
   classEntry->serialize = zend_class_serialize_deny;
   /* disable unserialization */
   classEntry->unserialize = zend_class_unserialize_deny;
+
+  /* Class Constants */
+  zend_declare_class_constant_long(classEntry, "VALUE_LOW", sizeof("VALUE_LOW") - 1, VALUE_LOW);
+  zend_declare_class_constant_long(classEntry, "VALUE_HIGH", sizeof("VALUE_HIGH") - 1, VALUE_HIGH);
 
   /* initialize lineObjectHandlers with standard object handlers */
   memcpy(&lineObjectHandlers, zend_get_std_object_handlers(), sizeof(zend_object_handlers));
@@ -265,13 +276,13 @@ PHP_METHOD(GPIO_Line, getOffset) {
 }
 /* }}} */
 
-/* {{{ GPIO\Line::request(string $consumer, int $type, int $flags, int $default = 0): void */
+/* {{{ GPIO\Line::request(string $consumer, int $type, int $flags, int $value = self::VALUE_LOW): void */
 PHP_METHOD(GPIO_Line, request) {
   char *consumer;
   size_t consumerLen;
   zend_long type;
   zend_long flags;
-  zend_long value = 0;
+  zend_long value = VALUE_LOW;
   ZEND_PARSE_PARAMETERS_START(3, 4)
     Z_PARAM_STRING(consumer, consumerLen)
     Z_PARAM_LONG(type)
@@ -280,26 +291,41 @@ PHP_METHOD(GPIO_Line, request) {
     Z_PARAM_LONG(value)
   ZEND_PARSE_PARAMETERS_END();
 
+  if (type & GPIOD_LINE_REQUEST_DIRECTION_OUTPUT == GPIOD_LINE_REQUEST_DIRECTION_OUTPUT) {
+    if (value < VALUE_LOW) {
+      zend_throw_exception_ex(zceException, 0, "$value must not be less than %d", VALUE_LOW);
+
+      RETURN_THROWS();
+    }
+
+    if (value > VALUE_HIGH) {
+      zend_throw_exception_ex(zceException, 0, "$value must not be greater than %d", VALUE_HIGH);
+
+      RETURN_THROWS();
+    }
+  }
+
   struct gpiod_line_request_config config;
   config.consumer = consumer;
   config.request_type = (int)type;
   config.flags = (int)flags;
 
+  errno = 0;
   lineObject *lineInstance = getLineObject(Z_OBJ_P(ZEND_THIS));
   int result = gpiod_line_request(lineInstance->line, &config, (int)value);
   if (result == -1) {
-    zend_throw_error(zceException, "Failed to request line");
+    zend_throw_exception_ex(zceException, errno, "Failed to request line: %s", strerror(errno));
 
     RETURN_THROWS();
   }
 }
 /* }}} */
 
-/* {{{ GPIO\Line::setConfig(int $direction, int $flags, int $value = 0): void */
+/* {{{ GPIO\Line::setConfig(int $direction, int $flags, int $value = self::VALUE_LOW): void */
 PHP_METHOD(GPIO_Line, setConfig) {
   zend_long direction;
   zend_long flags;
-  zend_long value = 0;
+  zend_long value = VALUE_LOW;
   ZEND_PARSE_PARAMETERS_START(2, 3)
     Z_PARAM_LONG(direction)
     Z_PARAM_LONG(flags)
@@ -307,10 +333,25 @@ PHP_METHOD(GPIO_Line, setConfig) {
     Z_PARAM_LONG(value)
   ZEND_PARSE_PARAMETERS_END();
 
+  if (direction & GPIOD_LINE_REQUEST_DIRECTION_OUTPUT == GPIOD_LINE_REQUEST_DIRECTION_OUTPUT) {
+    if (value < VALUE_LOW) {
+      zend_throw_exception_ex(zceException, 0, "$value must not be less than %d", VALUE_LOW);
+
+      RETURN_THROWS();
+    }
+
+    if (value > VALUE_HIGH) {
+      zend_throw_exception_ex(zceException, 0, "$value must not be greater than %d", VALUE_HIGH);
+
+      RETURN_THROWS();
+    }
+  }
+
+  errno = 0;
   lineObject *lineInstance = getLineObject(Z_OBJ_P(ZEND_THIS));
   int result = gpiod_line_set_config(lineInstance->line, (int)direction, (int)flags, (int)value);
   if (result == -1) {
-    zend_throw_error(zceException, "Failed to set line configuration");
+    zend_throw_exception_ex(zceException, errno, "Failed to set line configuration: %s", strerror(errno));
 
     RETURN_THROWS();
   }
@@ -321,28 +362,42 @@ PHP_METHOD(GPIO_Line, setConfig) {
 PHP_METHOD(GPIO_Line, setDirectionInput) {
   ZEND_PARSE_PARAMETERS_NONE();
 
+  errno = 0;
   lineObject *lineInstance = getLineObject(Z_OBJ_P(ZEND_THIS));
   int result = gpiod_line_set_direction_input(lineInstance->line);
   if (result == -1) {
-    zend_throw_error(zceException, "Failed to set line direction");
+    zend_throw_exception_ex(zceException, errno, "Failed to set line direction: %s", strerror(errno));
 
     RETURN_THROWS();
   }
 }
 /* }}} */
 
-/* {{{ GPIO\Line::setDirectionOutput(int $value = 0): void */
+/* {{{ GPIO\Line::setDirectionOutput(int $value = self::VALUE_LOW): void */
 PHP_METHOD(GPIO_Line, setDirectionOutput) {
-  zend_long value = 0;
+  zend_long value = VALUE_LOW;
   ZEND_PARSE_PARAMETERS_START(0, 1)
     Z_PARAM_OPTIONAL
     Z_PARAM_LONG(value)
   ZEND_PARSE_PARAMETERS_END();
 
+  if (value < VALUE_LOW) {
+    zend_throw_exception_ex(zceException, 0, "$value must not be less than %d", VALUE_LOW);
+
+    RETURN_THROWS();
+  }
+
+  if (value > VALUE_HIGH) {
+    zend_throw_exception_ex(zceException, 0, "$value must not be greater than %d", VALUE_HIGH);
+
+    RETURN_THROWS();
+  }
+
+  errno = 0;
   lineObject *lineInstance = getLineObject(Z_OBJ_P(ZEND_THIS));
   int result = gpiod_line_set_direction_output(lineInstance->line, (int)value);
   if (result == -1) {
-    zend_throw_error(zceException, "Failed to set line configuration");
+    zend_throw_exception_ex(zceException, errno, "Failed to set line configuration: %s", strerror(errno));
 
     RETURN_THROWS();
   }
@@ -356,10 +411,11 @@ PHP_METHOD(GPIO_Line, setFlags) {
     Z_PARAM_LONG(flags)
   ZEND_PARSE_PARAMETERS_END();
 
+  errno = 0;
   lineObject *lineInstance = getLineObject(Z_OBJ_P(ZEND_THIS));
   int result = gpiod_line_set_flags(lineInstance->line, (int)flags);
   if (result == -1) {
-    zend_throw_error(zceException, "Failed to set line flags");
+    zend_throw_exception_ex(zceException, errno, "Failed to set line flags: %s", strerror(errno));
 
     RETURN_THROWS();
   }
@@ -373,10 +429,23 @@ PHP_METHOD(GPIO_Line, setValue) {
     Z_PARAM_LONG(value)
   ZEND_PARSE_PARAMETERS_END();
 
+  if (value < VALUE_LOW) {
+    zend_throw_exception_ex(zceException, 0, "$value must not be less than %d", VALUE_LOW);
+
+    RETURN_THROWS();
+  }
+
+  if (value > VALUE_HIGH) {
+    zend_throw_exception_ex(zceException, 0, "$value must not be greater than %d", VALUE_HIGH);
+
+    RETURN_THROWS();
+  }
+
+  errno = 0;
   lineObject *lineInstance = getLineObject(Z_OBJ_P(ZEND_THIS));
   int result = gpiod_line_set_value(lineInstance->line, (int)value);
   if (result == -1) {
-    zend_throw_error(zceException, "Failed to set line value");
+    zend_throw_exception_ex(zceException, errno, "Failed to set line value: %s", strerror(errno));
 
     RETURN_THROWS();
   }

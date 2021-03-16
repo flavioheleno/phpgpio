@@ -1,5 +1,5 @@
 --TEST--
-Check if phpgpio is loaded
+GPIO\Chip General Class Test
 --SKIPIF--
 <?php
 if (! extension_loaded('phpgpio')) {
@@ -8,7 +8,7 @@ if (! extension_loaded('phpgpio')) {
 ?>
 --FILE--
 <?php
-echo 'The extension "phpgpio" is available';
+var_dump(GPIO\Chip::isDevice('/dev/null'));
 ?>
 --EXPECT--
-The extension "phpgpio" is available
+bool(false)
