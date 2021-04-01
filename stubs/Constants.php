@@ -93,6 +93,11 @@ const REQUEST_EVENT_BOTH_EDGES = 0x06;
 
 /************** LINE REQUEST FLAGS **************/
 /**
+ * No flags.
+ * @var int
+ */
+const REQUEST_FLAG_NONE = 0x00;
+/**
  * The line is an open-drain port.
  * @var int
  */

@@ -1,5 +1,5 @@
 /* This is a generated file, edit the .stub.php file instead.
- * Stub hash: 6020ef6d6f3aa66c7928b5037d969b6fcf1294af */
+ * Stub hash: 9139a6171102b30bd7514ee5468b723e8015eb7c */
 
 ZEND_BEGIN_ARG_WITH_RETURN_OBJ_INFO_EX(arginfo_class_GPIO_Bulk_getChip, 0, 0, GPIO\\Chip, 0)
 ZEND_END_ARG_INFO()
@@ -43,11 +43,7 @@ ZEND_BEGIN_ARG_INFO_EX(arginfo_class_GPIO_Chip___construct, 0, 0, 1)
 	ZEND_ARG_TYPE_INFO(0, path, IS_STRING, 0)
 ZEND_END_ARG_INFO()
 
-ZEND_BEGIN_ARG_WITH_RETURN_OBJ_INFO_EX(arginfo_class_GPIO_Chip_findLineUnique, 0, 1, GPIO\\Line, 0)
-	ZEND_ARG_TYPE_INFO(0, name, IS_STRING, 0)
-ZEND_END_ARG_INFO()
-
-ZEND_BEGIN_ARG_WITH_RETURN_OBJ_INFO_EX(arginfo_class_GPIO_Chip_findAllLines, 0, 1, GPIO\\Bulk, 0)
+ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_GPIO_Chip_findLine, 0, 1, IS_LONG, 0)
 	ZEND_ARG_TYPE_INFO(0, name, IS_STRING, 0)
 ZEND_END_ARG_INFO()
 
@@ -84,8 +80,6 @@ ZEND_END_ARG_INFO()
 #define arginfo_class_GPIO_Line_getValue arginfo_class_GPIO_Bulk_count
 
 #define arginfo_class_GPIO_Line_isActiveLow arginfo_class_GPIO_Bulk_valid
-
-#define arginfo_class_GPIO_Line_isRequested arginfo_class_GPIO_Bulk_valid
 
 #define arginfo_class_GPIO_Line_isUsed arginfo_class_GPIO_Bulk_valid
 
@@ -134,8 +128,7 @@ ZEND_METHOD(GPIO_Bulk, rewind);
 ZEND_METHOD(GPIO_Bulk, valid);
 ZEND_METHOD(GPIO_Chip, isDevice);
 ZEND_METHOD(GPIO_Chip, __construct);
-ZEND_METHOD(GPIO_Chip, findLineUnique);
-ZEND_METHOD(GPIO_Chip, findAllLines);
+ZEND_METHOD(GPIO_Chip, findLine);
 ZEND_METHOD(GPIO_Chip, getAllLines);
 ZEND_METHOD(GPIO_Chip, getLine);
 ZEND_METHOD(GPIO_Chip, getLines);
@@ -150,7 +143,6 @@ ZEND_METHOD(GPIO_Line, getDrive);
 ZEND_METHOD(GPIO_Line, getChip);
 ZEND_METHOD(GPIO_Line, getValue);
 ZEND_METHOD(GPIO_Line, isActiveLow);
-ZEND_METHOD(GPIO_Line, isRequested);
 ZEND_METHOD(GPIO_Line, isUsed);
 ZEND_METHOD(GPIO_Line, getName);
 ZEND_METHOD(GPIO_Line, getOffset);
@@ -181,8 +173,7 @@ static const zend_function_entry class_GPIO_Bulk_methods[] = {
 static const zend_function_entry class_GPIO_Chip_methods[] = {
 	ZEND_ME(GPIO_Chip, isDevice, arginfo_class_GPIO_Chip_isDevice, ZEND_ACC_PUBLIC|ZEND_ACC_STATIC)
 	ZEND_ME(GPIO_Chip, __construct, arginfo_class_GPIO_Chip___construct, ZEND_ACC_PUBLIC)
-	ZEND_ME(GPIO_Chip, findLineUnique, arginfo_class_GPIO_Chip_findLineUnique, ZEND_ACC_PUBLIC)
-	ZEND_ME(GPIO_Chip, findAllLines, arginfo_class_GPIO_Chip_findAllLines, ZEND_ACC_PUBLIC)
+	ZEND_ME(GPIO_Chip, findLine, arginfo_class_GPIO_Chip_findLine, ZEND_ACC_PUBLIC)
 	ZEND_ME(GPIO_Chip, getAllLines, arginfo_class_GPIO_Chip_getAllLines, ZEND_ACC_PUBLIC)
 	ZEND_ME(GPIO_Chip, getLine, arginfo_class_GPIO_Chip_getLine, ZEND_ACC_PUBLIC)
 	ZEND_ME(GPIO_Chip, getLines, arginfo_class_GPIO_Chip_getLines, ZEND_ACC_PUBLIC)
@@ -207,7 +198,6 @@ static const zend_function_entry class_GPIO_Line_methods[] = {
 	ZEND_ME(GPIO_Line, getChip, arginfo_class_GPIO_Line_getChip, ZEND_ACC_PUBLIC)
 	ZEND_ME(GPIO_Line, getValue, arginfo_class_GPIO_Line_getValue, ZEND_ACC_PUBLIC)
 	ZEND_ME(GPIO_Line, isActiveLow, arginfo_class_GPIO_Line_isActiveLow, ZEND_ACC_PUBLIC)
-	ZEND_ME(GPIO_Line, isRequested, arginfo_class_GPIO_Line_isRequested, ZEND_ACC_PUBLIC)
 	ZEND_ME(GPIO_Line, isUsed, arginfo_class_GPIO_Line_isUsed, ZEND_ACC_PUBLIC)
 	ZEND_ME(GPIO_Line, getName, arginfo_class_GPIO_Line_getName, ZEND_ACC_PUBLIC)
 	ZEND_ME(GPIO_Line, getOffset, arginfo_class_GPIO_Line_getOffset, ZEND_ACC_PUBLIC)

@@ -232,16 +232,6 @@ PHP_METHOD(GPIO_Line, isActiveLow) {
 }
 /* }}} */
 
-/* {{{ GPIO\Line::isRequested(): bool */
-PHP_METHOD(GPIO_Line, isRequested) {
-  ZEND_PARSE_PARAMETERS_NONE();
-
-  lineObject *lineInstance = getLineObject(Z_OBJ_P(ZEND_THIS));
-
-  RETURN_BOOL(gpiod_line_is_requested(lineInstance->line));
-}
-/* }}} */
-
 /* {{{ GPIO\Line::isUsed(): bool */
 PHP_METHOD(GPIO_Line, isUsed) {
   ZEND_PARSE_PARAMETERS_NONE();
@@ -309,6 +299,56 @@ PHP_METHOD(GPIO_Line, request) {
   config.consumer = consumer;
   config.request_type = (int)type;
   config.flags = (int)flags;
+
+  /* https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/tree/lib/core.c#n663 */
+  if (
+    (type != GPIOD_LINE_REQUEST_DIRECTION_OUTPUT) &&
+    (flags & (GPIOD_LINE_REQUEST_FLAG_OPEN_DRAIN | GPIOD_LINE_REQUEST_FLAG_OPEN_SOURCE))
+  ) {
+    zend_throw_exception_ex(
+      zceException,
+      0,
+      "Invalid request flag combination: GPIO\\REQUEST_FLAG_OPEN_DRAIN and GPIO\\REQUEST_FLAG_OPEN_SOURCE can only be used with GPIO\\REQUEST_DIRECTION_OUTPUT"
+    );
+
+    RETURN_THROWS();
+  }
+
+  if (
+    (flags & GPIOD_LINE_REQUEST_FLAG_OPEN_DRAIN) &&
+    (flags & GPIOD_LINE_REQUEST_FLAG_OPEN_SOURCE)
+  ) {
+    zend_throw_exception_ex(
+      zceException,
+      0,
+      "Invalid request flag combination: GPIO\\REQUEST_FLAG_OPEN_DRAIN and GPIO\\REQUEST_FLAG_OPEN_SOURCE cannot be used at the same time"
+    );
+
+    RETURN_THROWS();
+  }
+
+  int biasFlags = 0;
+  if (flags & GPIOD_LINE_REQUEST_FLAG_BIAS_DISABLED) {
+    biasFlags++;
+  }
+
+  if (flags & GPIOD_LINE_REQUEST_FLAG_BIAS_PULL_UP) {
+    biasFlags++;
+  }
+
+  if (flags & GPIOD_LINE_REQUEST_FLAG_BIAS_PULL_DOWN) {
+    biasFlags++;
+  }
+
+  if (biasFlags > 1) {
+    zend_throw_exception_ex(
+      zceException,
+      0,
+      "Invalid request flag combination: must use only one of GPIO\\REQUEST_FLAG_BIAS_DISABLED, GPIO\\REQUEST_FLAG_BIAS_PULL_UP and GPIO\\REQUEST_FLAG_BIAS_PULL_DOWN at a time"
+    );
+
+    RETURN_THROWS();
+  }
 
   errno = 0;
   lineObject *lineInstance = getLineObject(Z_OBJ_P(ZEND_THIS));

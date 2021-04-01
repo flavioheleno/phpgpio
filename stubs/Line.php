@@ -72,13 +72,6 @@ final class Line {
   public function isActiveLow(): bool {}
 
   /**
-   * Check if this user has ownership of this line.
-   *
-   * @return bool
-   */
-  public function isRequested(): bool {}
-
-  /**
    * Check if this line is used by the kernel or other user space process.
    *
    * @return bool

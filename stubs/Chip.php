@@ -32,23 +32,13 @@ final class Chip {
   public function __construct(string $path) {}
 
   /**
-   * Find all GPIO lines by name among lines exposed by this GPIO chip.
-   * Note: Throws an error if multiple lines match the name.
+   * Map a GPIO line's name to its offset within the chip.
    *
    * @param string $name Line name.
    *
-   * @return \GPIO\Line
+   * @return int
    */
-  public function findLineUnique(string $name): Line {}
-
-  /**
-   * Find all GPIO lines by name among lines exposed by this GPIO chip.
-   *
-   * @param string $name Line name.
-   *
-   * @return \GPIO\Bulk
-   */
-  public function findAllLines(string $name): Bulk {}
+  public function findLine(string $name): int {}
 
   /**
    * Get all lines exposed by this chip.

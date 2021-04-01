@@ -55,7 +55,7 @@ static void chipFreeObject(zend_object *obj) {
 
   /* if the chip was open, close it */
   if (chipInstance->chip != NULL) {
-    gpiod_chip_close(chipInstance->chip);
+    gpiod_chip_unref(chipInstance->chip);
     chipInstance->chip = NULL;
   }
 
@@ -168,8 +168,8 @@ PHP_METHOD(GPIO_Chip, __construct) {
 }
 /* }}} */
 
-/* {{{ GPIO\Chip::findLineUnique(string $name): GPIO\Line */
-PHP_METHOD(GPIO_Chip, findLineUnique) {
+/* {{{ GPIO\Chip::findLine(string $name): int */
+PHP_METHOD(GPIO_Chip, findLine) {
   char *name;
   size_t nameLen;
   ZEND_PARSE_PARAMETERS_START(1, 1)
@@ -178,49 +178,14 @@ PHP_METHOD(GPIO_Chip, findLineUnique) {
 
   errno = 0;
   chipObject *chipInstance = getChipObject(Z_OBJ_P(ZEND_THIS));
-  struct gpiod_line *line = gpiod_chip_find_line_unique(chipInstance->chip, name);
-  if (line == NULL) {
+  int offset = gpiod_chip_find_line(chipInstance->chip, name);
+  if (offset == -1) {
     zend_throw_exception_ex(zceException, errno, "Line not found: %s", strerror(errno));
 
     RETURN_THROWS();
   }
 
-  /* create a new GPIO\Line instance */
-  zend_object *obj = lineCreateObject(zceLine);
-  lineSetData(obj, line);
-
-  /* update GPIO\Line instance property with reference to $this */
-  zend_update_property(zceLine, obj, "chip", sizeof("chip") - 1, ZEND_THIS);
-
-  RETURN_OBJ(obj);
-}
-/* }}} */
-
-/* {{{ GPIO\Chip::findAllLines(string $name): GPIO\Bulk */
-PHP_METHOD(GPIO_Chip, findAllLines) {
-  char *name;
-  size_t nameLen;
-  ZEND_PARSE_PARAMETERS_START(1, 1)
-    Z_PARAM_STRING(name, nameLen)
-  ZEND_PARSE_PARAMETERS_END();
-
-  errno = 0;
-  chipObject *chipInstance = getChipObject(Z_OBJ_P(ZEND_THIS));
-  struct gpiod_line_bulk *bulk = gpiod_chip_find_line(chipInstance->chip, name);
-  if (bulk == NULL) {
-    zend_throw_exception_ex(zceException, errno, "Failed to find lines: %s", strerror(errno));
-
-    RETURN_THROWS();
-  }
-
-  /* create a new GPIO\Bulk instance */
-  zend_object *obj = bulkCreateObject(zceBulk);
-  bulkSetData(obj, bulk);
-
-  /* update GPIO\Bulk instance property with reference to $this */
-  zend_update_property(zceBulk, obj, "chip", sizeof("chip") - 1, ZEND_THIS);
-
-  RETURN_OBJ(obj);
+  RETURN_LONG(offset);
 }
 /* }}} */
 

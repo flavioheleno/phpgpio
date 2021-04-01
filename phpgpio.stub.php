@@ -132,23 +132,13 @@ final class Chip {
   public function __construct(string $path) {}
 
   /**
-   * Find all GPIO lines by name among lines exposed by this GPIO chip.
-   * Note: Throws an error if multiple lines match the name.
+   * Map a GPIO line's name to its offset within the chip.
    *
    * @param string $name Line name.
    *
-   * @return \GPIO\Line
+   * @return int
    */
-  public function findLineUnique(string $name): Line {}
-
-  /**
-   * Find all GPIO lines by name among lines exposed by this GPIO chip.
-   *
-   * @param string $name Line name.
-   *
-   * @return \GPIO\Bulk
-   */
-  public function findAllLines(string $name): Bulk {}
+  public function findLine(string $name): int {}
 
   /**
    * Get all lines exposed by this chip.
@@ -295,6 +285,11 @@ const REQUEST_EVENT_BOTH_EDGES = 0x06;
 
 /************** LINE REQUEST FLAGS **************/
 /**
+ * No flags.
+ * @var int
+ */
+const REQUEST_FLAG_NONE = 0x00;
+/**
  * The line is an open-drain port.
  * @var int
  */
@@ -410,13 +405,6 @@ final class Line {
    * @return bool
    */
   public function isActiveLow(): bool {}
-
-  /**
-   * Check if this user has ownership of this line.
-   *
-   * @return bool
-   */
-  public function isRequested(): bool {}
 
   /**
    * Check if this line is used by the kernel or other user space process.
