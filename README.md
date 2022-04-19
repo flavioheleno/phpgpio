@@ -1,3 +1,5 @@
+**NOTE:** Check [embedded-php/ext-gpio](https://github.com/embedded-php/ext-gpio) instead.
+
 # phpgpio
 
 Object-oriented PHP bindings for the [libgpiod](https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/) library
